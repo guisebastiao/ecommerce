@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import {
   Carousel,
   CarouselContent,
-  CarouselDots,
   CarouselItem,
 } from "@/components/ui/carousel";
 
@@ -42,22 +41,21 @@ export const RotatingBanner = () => {
 
   return (
     <Carousel
-      className="rounded-md overflow-hidden"
+      className="rounded-md overflow-hidden pointer-events-none"
       setApi={setApi}
-      opts={{ loop: true, duration: 50 }}
+      opts={{ loop: true }}
     >
       <CarouselContent>
         {banners.map((banner, key) => (
           <CarouselItem key={key}>
             <img
               src={banner}
-              className="rounded-md"
+              className="rounded"
               alt="banner-image"
             />
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselDots disabled={true} />
     </Carousel>
   );
 };

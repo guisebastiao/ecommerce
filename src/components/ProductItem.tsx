@@ -1,8 +1,9 @@
 import type { ProductDTO } from "@/types/productTypes";
-import { Star } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Heart, Star } from "lucide-react";
+import { twMerge } from "tailwind-merge";
 import { Button } from "./ui/button";
 import { useState } from "react";
-import { twMerge } from "tailwind-merge";
 
 export interface ProductItemProps {
   product: ProductDTO;
@@ -10,6 +11,8 @@ export interface ProductItemProps {
 
 export const ProductItem = ({ product }: ProductItemProps) => {
   const [isHovered, setIsHovered] = useState(false);
+
+  const navegate = useNavigate();
 
   const currencyFormat = (value: number) => {
     return new Intl.NumberFormat("pt-br", {
@@ -20,13 +23,29 @@ export const ProductItem = ({ product }: ProductItemProps) => {
 
   const reviewAverage = Math.round(product.reviewRating);
 
+  const handleNavigateToProduct = () => {
+    navegate(`/product/${product.productId}`);
+  };
+
   return (
     <article
       className="relative h-[350px] overflow-hidden rounded cursor-pointer border"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={handleNavigateToProduct}
     >
       <div className="relative w-full h-[250px] bg-accent rounded">
+        <Button
+          size="icon"
+          variant="outline"
+          className="absolute top-2 right-2 size-8 rounded-full z-40 cursor-pointer"
+        >
+          <Heart
+            className={twMerge(
+              product.isFavorite && "stroke-primary-theme fill-primary-theme"
+            )}
+          />
+        </Button>
         <img
           src={product.productPictures[0].url}
           className="absolute size-full object-contain rounded bg-transparent mix-blend-multiply p-3"

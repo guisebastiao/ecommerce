@@ -2,6 +2,13 @@ import type { CategoryDTO } from "./categoryTypes";
 import type { DiscountDTO } from "./discountTypes";
 import type { ProductPictureDTO } from "./productPictureTypes";
 
+export interface ProductQueryParams {
+  search?: string;
+  category?: string;
+  offset: string;
+  limit: string;
+}
+
 export interface ProductDTO {
   productId: string;
   name: string;

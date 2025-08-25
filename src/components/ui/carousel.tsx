@@ -30,10 +30,6 @@ type CarouselContextProps = {
   selectedIndex: number;
 } & CarouselProps;
 
-type CarouselDotProps = {
-  disabled?: boolean;
-} & React.ComponentProps<"div">;
-
 const CarouselContext = React.createContext<CarouselContextProps | null>(null);
 
 function useCarousel() {
@@ -171,7 +167,7 @@ function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-function CarouselDots({ className, disabled, ...props }: CarouselDotProps) {
+function CarouselDots({ className, ...props }: React.ComponentProps<"div">) {
   const { selectedIndex, scrollTo, api } = useCarousel();
 
   return (
@@ -192,11 +188,10 @@ function CarouselDots({ className, disabled, ...props }: CarouselDotProps) {
           aria-controls="carousel-item"
           aria-label={`Slide ${index + 1}`}
           className={cn(
-            "size-3.5 rounded-full bg-ring cursor-pointer",
-            index === selectedIndex && "border-2 bg-primary-theme"
+            "size-2 rounded-full bg-ring cursor-pointer",
+            index === selectedIndex && "bg-primary-theme"
           )}
           onClick={() => scrollTo(index)}
-          disabled={disabled}
         />
       ))}
     </div>

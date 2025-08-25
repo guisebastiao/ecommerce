@@ -1,5 +1,5 @@
 import { createContext, type ReactNode, useContext, useState } from "react";
-import type { UserSimpleDTO } from "@/types/userTypes";
+import type { ClientSimpleDTO } from "@/types/clientTypes";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -7,13 +7,13 @@ interface AuthProviderProps {
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  user: UserSimpleDTO | null;
+  user: ClientSimpleDTO | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [isAuthenticated, _setAuthenticated] = useState<boolean>(true);
+  const [isAuthenticated, _setAuthenticated] = useState<boolean>(false);
 
   const user = null;
 

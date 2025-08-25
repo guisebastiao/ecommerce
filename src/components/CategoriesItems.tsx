@@ -40,16 +40,15 @@ export const CategoriesItems = () => {
   };
 
   return (
-    <section className="h-[145px] flex justify-between gap-2 select-none">
+    <section className="h-24 flex justify-between gap-2 select-none">
       <Button
         size="icon"
-        variant="ghost"
+        variant="secondary"
         className="h-full cursor-pointer rounded"
         onClick={slideToLeft}
       >
         <ChevronLeft className="size-6" />
       </Button>
-
       <div className="relative w-full h-full overflow-hidden">
         <div
           className="flex gap-2 overflow-x-scroll scrollbar-hide scroll-smooth"
@@ -62,24 +61,23 @@ export const CategoriesItems = () => {
               <div
                 key={index}
                 className={twMerge(
-                  "w-[170px] h-[145px] rounded border flex flex-col items-center justify-evenly p-0 flex-shrink-0 px-2 cursor-pointer transition-all",
+                  "w-36 h-24 rounded border flex flex-col items-center justify-evenly p-0 flex-shrink-0 px-2 cursor-pointer transition-all",
                   categoryQuery === category.name &&
                     "bg-primary-theme border-none text-white",
                   categoryQuery !== category.name && "hover:bg-accent"
                 )}
                 onClick={() => handleSearchCategories(category.name)}
               >
-                <IconComponent className="size-12 stroke-1" />
-                <span className="font-medium text-center">{category.name}</span>
+                <IconComponent className="size-8 stroke-1" />
+                <span className="text-sm text-center">{category.name}</span>
               </div>
             );
           })}
         </div>
       </div>
-
       <Button
         size="icon"
-        variant="ghost"
+        variant="secondary"
         className="h-full cursor-pointer rounded"
         onClick={slideToRight}
       >

@@ -1,7 +1,13 @@
-export interface UserSimpleDTO {
+export enum Role {
+  ADMIN,
+  CLIENT,
+}
+
+export interface ClientSimpleDTO {
   clientId: string;
   name: string;
   surname: string;
+  role: Role;
   clientPicture: ClientPictureDTO;
 }
 
