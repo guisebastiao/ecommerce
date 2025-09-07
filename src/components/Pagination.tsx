@@ -1,28 +1,14 @@
-import type { ProductQueryParams } from "@/types/productTypes";
+import { Pagination as PaginationRoot, PaginationContent, PaginationLink } from "@/components/ui/pagination";
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import type { PagingDTO } from "@/types/default";
-import {
-  Pagination as PaginationRoot,
-  PaginationContent,
-  PaginationLink,
-} from "@/components/ui/pagination";
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-} from "lucide-react";
 
 interface PaginationProps {
   paging: PagingDTO;
 }
 
 export const Pagination = ({ paging }: PaginationProps) => {
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const params = Object.fromEntries(searchParams.entries()) as {
-    [K in keyof ProductQueryParams]: string;
-  };
+  const [_, setSearchParams] = useSearchParams();
 
   const firstPage = () => {
     setSearchParams((params) => {
@@ -32,7 +18,7 @@ export const Pagination = ({ paging }: PaginationProps) => {
   };
 
   const previousPage = () => {
-    if (Number(params.offset) - 1 <= 0) return;
+    if (Number(paging.currentPage) - 1 <= 0) return;
 
     setSearchParams((params) => {
       params.set("offset", String(paging.currentPage - 1));
@@ -41,7 +27,7 @@ export const Pagination = ({ paging }: PaginationProps) => {
   };
 
   const nextPage = () => {
-    if (Number(params.offset) > paging.totalPages) return;
+    if (Number(paging.currentPage) > paging.totalPages) return;
 
     setSearchParams((params) => {
       params.set("offset", String(paging.currentPage + 1));
@@ -62,32 +48,16 @@ export const Pagination = ({ paging }: PaginationProps) => {
         <span className="text-sm font-medium mr-3">
           Página {paging.currentPage} de {paging.totalPages}
         </span>
-        <PaginationLink
-          onClick={firstPage}
-          disabled={Number(params.offset) <= 1}
-          className="hover:bg-zinc-300 size-8 rounded cursor-pointer"
-        >
+        <PaginationLink onClick={firstPage} disabled={Number(paging.currentPage) <= 1} className="hover:bg-zinc-300 size-8 rounded cursor-pointer">
           <ChevronsLeft />
         </PaginationLink>
-        <PaginationLink
-          onClick={previousPage}
-          disabled={Number(params.offset) <= 1}
-          className="hover:bg-zinc-300 size-8 rounded cursor-pointer"
-        >
+        <PaginationLink onClick={previousPage} disabled={Number(paging.currentPage) <= 1} className="hover:bg-zinc-300 size-8 rounded cursor-pointer">
           <ChevronLeft className="size-4" />
         </PaginationLink>
-        <PaginationLink
-          onClick={nextPage}
-          disabled={Number(params.offset) >= paging.totalPages}
-          className="hover:bg-zinc-300 size-8 rounded cursor-pointer"
-        >
+        <PaginationLink onClick={nextPage} disabled={Number(paging.currentPage) >= paging.totalPages} className="hover:bg-zinc-300 size-8 rounded cursor-pointer">
           <ChevronRight className="size-4" />
         </PaginationLink>
-        <PaginationLink
-          onClick={lastPage}
-          disabled={Number(params.offset) >= paging.totalPages}
-          className="hover:bg-zinc-300 size-8 rounded cursor-pointer"
-        >
+        <PaginationLink onClick={lastPage} disabled={Number(paging.currentPage) >= paging.totalPages} className="hover:bg-zinc-300 size-8 rounded cursor-pointer">
           <ChevronsRight className="size-4" />
         </PaginationLink>
       </PaginationContent>

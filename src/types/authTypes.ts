@@ -5,3 +5,7 @@ export interface ActiveLoginDTO {
   expiresRefreshToken: Date;
   client: ClientSimpleDTO;
 }
+
+export interface LoginDTO {
+  code: string;
+}

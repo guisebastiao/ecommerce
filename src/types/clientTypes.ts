@@ -8,7 +8,7 @@ export interface ClientSimpleDTO {
   name: string;
   surname: string;
   role: Role;
-  clientPicture: ClientPictureDTO;
+  clientPicture: ClientPictureDTO | null;
 }
 
 export interface ClientPictureDTO {

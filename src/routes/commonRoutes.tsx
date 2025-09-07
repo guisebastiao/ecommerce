@@ -6,7 +6,7 @@ export const CommonRoutes = () => {
   return (
     <>
       <Header />
-      <main className="max-w-6xl w-full min-h-screen mt-20">
+      <main className="max-w-7xl w-full min-h-[calc(100dvh-80px-190px)] mt-20">
         <Outlet />
       </main>
       <Footer />

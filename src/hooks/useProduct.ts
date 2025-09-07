@@ -4,12 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export const findAllProducts = (params: ProductQueryParams) => {
-  const { search = "", category = "", offset = "0", limit = "20" } = params;
+  const { search = "", category = "", offset = "1", limit = "20" } = params;
 
   return useQuery({
     queryKey: ["find-all-products", search, category, offset, limit],
-    queryFn: () =>
-      productService.findAllProducts({ search, category, offset, limit }),
+    queryFn: () => productService.findAllProducts({ search, category, offset, limit }),
     throwOnError: (error: Error) => {
       toast.error(error.message);
       return false;

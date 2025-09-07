@@ -13,19 +13,8 @@ export const CreateReview = () => {
           const starIndex = index + 1;
           const isFilled = (hovered ?? selected) >= starIndex;
           return (
-            <div
-              key={starIndex}
-              onMouseEnter={() => setHovered(starIndex)}
-              onMouseLeave={() => setHovered(null)}
-              onClick={() => setSelected(starIndex)}
-              role="button"
-              tabIndex={0}
-            >
-              {isFilled ? (
-                <Star className="fill-amber-300 stroke-amber-300 size-7" />
-              ) : (
-                <Star className="fill-transparent stroke-amber-300 size-7" />
-              )}
+            <div key={starIndex} onMouseEnter={() => setHovered(starIndex)} onMouseLeave={() => setHovered(null)} onClick={() => setSelected(starIndex)} role="button" tabIndex={0}>
+              {isFilled ? <Star className="fill-amber-300 stroke-amber-300 size-7" /> : <Star className="fill-transparent stroke-amber-300 size-7" />}
             </div>
           );
         })}

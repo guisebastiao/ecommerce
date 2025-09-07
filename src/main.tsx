@@ -10,11 +10,11 @@ import { router } from "@/routes";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <AuthProvider>
-      <QueryProvider>
+    <QueryProvider>
+      <AuthProvider>
         <RouterProvider router={router} />
         <Toaster />
-      </QueryProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </QueryProvider>
   </StrictMode>
 );

@@ -1,10 +1,6 @@
 import { type CarouselApi } from "@/components/ui/carousel";
 import { useEffect, useState } from "react";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 
 import Banner00 from "@/assets/banners/banner_00.png";
 import Banner01 from "@/assets/banners/banner_01.png";
@@ -40,19 +36,11 @@ export const RotatingBanner = () => {
   }, [api, banners.length]);
 
   return (
-    <Carousel
-      className="rounded-md overflow-hidden pointer-events-none"
-      setApi={setApi}
-      opts={{ loop: true }}
-    >
+    <Carousel className="rounded-md overflow-hidden pointer-events-none" setApi={setApi} opts={{ loop: true }}>
       <CarouselContent>
         {banners.map((banner, key) => (
-          <CarouselItem key={key}>
-            <img
-              src={banner}
-              className="rounded"
-              alt="banner-image"
-            />
+          <CarouselItem key={key} className="flex justify-center">
+            <img src={banner} className="rounded" alt="banner-image" />
           </CarouselItem>
         ))}
       </CarouselContent>

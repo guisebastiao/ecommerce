@@ -5,18 +5,12 @@ import { findAllProducts } from "@/hooks/useProduct";
 import { Pagination } from "@/components/Pagination";
 import { useSearchParams } from "react-router-dom";
 import { Spinner } from "@/components/Spinner";
-import { useEffect } from "react";
 
 export const Home = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  useEffect(() => {
-    setSearchParams((params) => {
-      params.set("offset", "1");
-      params.set("limit", "24");
-      return params;
-    });
-  }, []);
+  const [searchParams] = useSearchParams({
+    offset: "1",
+    limit: "24",
+  });
 
   const params = Object.fromEntries(searchParams.entries()) as {
     [K in keyof ProductQueryParams]: string;
@@ -32,28 +26,19 @@ export const Home = () => {
         <div className="flex justify-center">
           <Spinner className="size-5" />
         </div>
-      ) : !data || data?.data.paging.totalPages <= 0 ? (
+      ) : !data || data.data.paging.totalPages <= 0 ? (
         <div className="w-full flex flex-col items-center space-y-2">
-          <h3 className="font-bold text-center">
-            Nenhum produto encontrado com esse critério de pesquisa
-          </h3>
-          <p className="text-sm text-center">
-            Tente novamente com outro termo para busca...
-          </p>
+          <h3 className="font-bold text-center">Nenhum produto encontrado com esse critério de pesquisa</h3>
+          <p className="text-sm text-center">Tente novamente com outro termo para busca...</p>
         </div>
       ) : (
         <div className="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-2">
-          {data?.data.items.map((product) => (
-            <ProductItem
-              key={product.productId}
-              product={product}
-            />
+          {data.data.items.map((product) => (
+            <ProductItem key={product.productId} product={product} />
           ))}
         </div>
       )}
-      {!isLoading && data && data.data.paging.totalPages > 0 && (
-        <Pagination paging={data.data.paging} />
-      )}
+      {!isLoading && data && data.data.paging.totalPages > 0 && <Pagination paging={data.data.paging} />}
     </section>
   );
 };

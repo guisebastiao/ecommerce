@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@tailwind utilities;
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -128,6 +130,16 @@
   }
 }
 
+@layer utilities {
+  .h-app {
+    height: calc(100% - 80px - 190px);
+  }
+
+  .min-h-app {
+    min-height: calc(100% - 80px - 190px);
+  }
+}
+
 * {
   font-family: "Inter", sans-serif;
 }
@@ -156,4 +168,8 @@ body {
 *::-webkit-scrollbar-thumb {
   background-color: #000;
   border-radius: 5px;
+}
+
+input[type="number"]::-webkit-inner-spin-button {
+  appearance: none;
 }

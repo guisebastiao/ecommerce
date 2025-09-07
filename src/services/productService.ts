@@ -3,9 +3,7 @@ import type { DefaultDTO, PageResponseDTO } from "@/types/default";
 import { handleAxiosError } from "@/utils/handleAxiosError";
 import { axios } from "@/api/axios";
 
-const findAllProducts = async (
-  params: ProductQueryParams
-): Promise<DefaultDTO<PageResponseDTO<ProductDTO>>> => {
+const findAllProducts = async (params: ProductQueryParams): Promise<DefaultDTO<PageResponseDTO<ProductDTO>>> => {
   try {
     const response = await axios.get("/products", {
       params: { ...params },
@@ -17,11 +15,7 @@ const findAllProducts = async (
   }
 };
 
-const findProductById = async ({
-  productId,
-}: {
-  productId: string;
-}): Promise<DefaultDTO<ProductDTO>> => {
+const findProductById = async ({ productId }: { productId: string }): Promise<DefaultDTO<ProductDTO>> => {
   try {
     const response = await axios.get(`/products/${productId}`);
     return response.data;
