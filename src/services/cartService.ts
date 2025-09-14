@@ -1,9 +1,9 @@
-import type { CartItemDTO, CartQueryParams } from "@/types/cartTypes";
 import type { FavoriteRequestDTO } from "@/schemas/favoriteSchema";
-import type { DefaultDTO, PageResponseDTO } from "@/types/default";
-import { handleAxiosError } from "@/utils/handleAxiosError";
-import { axios } from "@/api/axios";
 import type { UpdateCartRequestDTO } from "@/schemas/cartSchema";
+import { handleAxiosError } from "@/utils/handleAxiosError";
+import type { DefaultDTO } from "@/types/default";
+import type { CartDTO } from "@/types/cartTypes";
+import { axios } from "@/api/axios";
 
 const addProductToCart = async (data: FavoriteRequestDTO): Promise<DefaultDTO<null>> => {
   try {
@@ -14,11 +14,9 @@ const addProductToCart = async (data: FavoriteRequestDTO): Promise<DefaultDTO<nu
   }
 };
 
-const findAllCartItems = async (params: CartQueryParams): Promise<DefaultDTO<PageResponseDTO<CartItemDTO>>> => {
+const findAllCartItems = async (): Promise<DefaultDTO<CartDTO>> => {
   try {
-    const response = await axios.get("/cart", {
-      params: { ...params },
-    });
+    const response = await axios.get("/cart");
 
     return response.data;
   } catch (error) {

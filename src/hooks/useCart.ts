@@ -1,6 +1,5 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
 import type { CartRequestDTO, UpdateCartRequestDTO } from "@/schemas/cartSchema";
-import type { CartQueryParams } from "@/types/cartTypes";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { cartService } from "@/services/cartService";
 import { queryClient } from "@/context/queryContext";
 import { toast } from "sonner";
@@ -18,12 +17,10 @@ export const addProductToCart = () => {
   });
 };
 
-export const findAllCartItems = (params: CartQueryParams) => {
-  const { offset = "1", limit = "20" } = params;
-
+export const findAllCartItems = () => {
   return useQuery({
-    queryKey: ["find-all-cart-items", offset, limit],
-    queryFn: () => cartService.findAllCartItems({ offset, limit }),
+    queryKey: ["find-all-cart-items"],
+    queryFn: () => cartService.findAllCartItems(),
     throwOnError: (error: Error) => {
       toast.error(error.message);
       return false;

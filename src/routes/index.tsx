@@ -15,6 +15,9 @@ import ForgotPassword from "@/pages/ForgotPassword";
 import RecoverPassword from "@/pages/RecoverPassword";
 import Favorite from "@/pages/Favorite";
 import Cart from "@/pages/Cart";
+import { Payment } from "@/pages/Payment";
+import { CreateAddress } from "@/pages/CreateAddress";
+import { Order } from "@/pages/Order";
 
 export const router = createBrowserRouter([
   {
@@ -63,6 +66,18 @@ export const router = createBrowserRouter([
           {
             path: "/cart",
             element: <Cart />,
+          },
+          {
+            path: "/payment",
+            element: <Payment />,
+          },
+          {
+            path: "/create-address",
+            element: <CreateAddress />,
+          },
+          {
+            path: "/orders",
+            element: <Order />,
           },
         ],
       },

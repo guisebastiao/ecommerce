@@ -43,7 +43,7 @@ const ForgotPassword = () => {
             )}
           />
           <Button className="bg-primary-theme hover:bg-primary-theme-hover cursor-pointer" disabled={isPending}>
-            {isPending && <Spinner className="size-4 border-white border-t-transparent" />}
+            {isPending && <Spinner className="size-4 border-t-white" />}
             <span>Enviar</span>
           </Button>
         </form>

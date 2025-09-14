@@ -66,7 +66,7 @@ export const Login = () => {
           />
           <div className="w-full flex flex-col gap-3">
             <Button className="bg-primary-theme hover:bg-primary-theme-hover cursor-pointer" disabled={isPending}>
-              {isPending ? <Spinner className="size-4 border-white border-t-transparent" /> : <LogIn />}
+              {isPending ? <Spinner className="size-4 border-t-white" /> : <LogIn />}
               <span>Entrar</span>
             </Button>
             <Button type="button" variant="secondary" className="cursor-pointer border" onClick={() => navigate("/register")} disabled={isPending}>

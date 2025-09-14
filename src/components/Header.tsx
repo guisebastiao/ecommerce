@@ -93,11 +93,11 @@ export const Header = () => {
         )}
         {isAuthenticated && (
           <div className="flex items-center gap-4">
-            <Button size="icon" variant="ghost" className="cursor-pointer sm:size-10 size-9 hover:bg-transparent" onClick={() => navigate("/cart")}>
-              <ShoppingCart className="size-6" />
-            </Button>
             <Button size="icon" variant="ghost" className="cursor-pointer sm:size-10 size-9 hover:bg-transparent" onClick={() => navigate("/favorites")}>
               <Heart className="size-6" />
+            </Button>
+            <Button size="icon" variant="ghost" className="cursor-pointer sm:size-10 size-9 hover:bg-transparent" onClick={() => navigate("/cart")}>
+              <ShoppingCart className="size-6" />
             </Button>
             <div className="size-9">
               <DropdownMenu>
@@ -123,7 +123,7 @@ export const Header = () => {
                     <span>Configurações</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleLogout} disabled={logoutIsLoading}>
-                    {logoutIsLoading ? <Spinner className="size-3.5 border-2" /> : <LogOut />}
+                    {logoutIsLoading ? <Spinner className="size-3.5 border-2 border-t-black" /> : <LogOut />}
                     <span>Sair</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>

@@ -1,13 +1,13 @@
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import type { UpdateCartRequestDTO } from "@/schemas/cartSchema";
 import { removeCartItem, updateQuantity } from "@/hooks/useCart";
-import { ChevronDown, ChevronUp, X } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import type { CartItemDTO } from "@/types/cartTypes";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { twMerge } from "tailwind-merge";
 import { Spinner } from "./Spinner";
+import { Input } from "./ui/input";
 
 export interface ProductCartItemProps {
   cartItem: CartItemDTO;
@@ -15,15 +15,22 @@ export interface ProductCartItemProps {
 
 export const ProductCartItem = ({ cartItem }: ProductCartItemProps) => {
   const [quantity, setQuantity] = useState(String(cartItem.quantity));
+  const [isOpen, setIsOpen] = useState(false);
 
   const { mutate: updateProductQuantity, isPending: isPendingProductQuantity } = updateQuantity();
-  const { mutate: removeProductCartItem, isPending: isPendingRemoveCartItem } = removeCartItem();
+  const { mutate: removeProductCartItem, isPending: isPendingRemoveCartItem, isSuccess } = removeCartItem();
 
   const navegate = useNavigate();
 
   useEffect(() => {
     setQuantity(String(cartItem.quantity));
   }, [cartItem.quantity]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      setIsOpen(false);
+    }
+  }, [isSuccess]);
 
   const currencyFormat = (value: number) => {
     return new Intl.NumberFormat("pt-br", {
@@ -42,79 +49,71 @@ export const ProductCartItem = ({ cartItem }: ProductCartItemProps) => {
   };
 
   const handleAddLess = () => {
-    if (cartItem.quantity <= 1) return;
-    const data: UpdateCartRequestDTO = { quantity: cartItem.quantity - 1 };
-    updateProductQuantity({ cartItemId: cartItem.cartItemId, data });
-  };
+    if (cartItem.quantity <= 1) {
+      setIsOpen(true);
+      return;
+    }
 
-  const handleUpdateQuantity = () => {
-    if (Number(quantity) < 1) return;
-    const data: UpdateCartRequestDTO = { quantity: Number(quantity) };
+    const data: UpdateCartRequestDTO = { quantity: cartItem.quantity - 1 };
     updateProductQuantity({ cartItemId: cartItem.cartItemId, data });
   };
 
   const handleRemoveCartItem = () => {
     removeProductCartItem({ cartItemId: cartItem.cartItemId });
+    setIsOpen(false);
   };
 
   return (
-    <article className="w-full h-24 overflow-hidden rounded shadow-[0_0_10px_rgba(230,230,232,0.5)] flex items-center " onClick={handleNavigateToProduct}>
-      <div className="w-[calc(100%/4)] flex items-center px-3">
+    <article className="w-full h-24 overflow-hidden rounded shadow-[0_0_10px_rgba(230,230,232,0.5)] flex items-center px-5" onClick={handleNavigateToProduct}>
+      <div className="w-[calc(100%-128px-224px)] flex items-center px-3">
         <div className="size-18 flex-shrink-0 relative rounded">
           <img src={cartItem.product.productPictures[0].url} className="absolute size-full object-contain rounded bg-transparent mix-blend-multiply p-2" alt="product-picture" />
         </div>
         <span className="flex-1 text-[15px] font-medium truncate">{cartItem.product.name}</span>
       </div>
-      <div className="w-[calc(100%/4)] flex items-center justify-center px-3">
-        <span className="text-[15px]">{currencyFormat(cartItem.product.originalPrice)}</span>
+      <div className="w-32 flex items-center justify-center px-3">
+        {cartItem.product.price ? (
+          <div className="flex gap-1 items-center">
+            <span className="text-[15px] text-primary-theme">{cartItem.product.price}</span>
+            <span className="text-xs line-through">{currencyFormat(cartItem.product.originalPrice)}</span>
+          </div>
+        ) : (
+          <span className="text-[15px]">{currencyFormat(cartItem.product.originalPrice)}</span>
+        )}
       </div>
-      <div className="w-[calc(100%/4)] flex items-center justify-center px-3">
+      <div className="w-56 flex items-center justify-center px-3">
         <div className="relative flex items-center" onClick={(e) => e.stopPropagation()}>
           <Input
-            disabled={isPendingProductQuantity}
+            disabled={true}
             type="number"
-            className="w-[72px] h-[44px] border border-zinc-400 rounded pl-4 pr-6"
+            className={twMerge("w-[72px] h-[44px] border rounded disabled:opacity-100 border-zinc-400 pl-4 pr-6", isPendingProductQuantity && "border-zinc-200 text-zinc-400")}
             value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
-            onBlur={() => {
-              if (quantity === "" || Number(quantity) < 1) setQuantity("1");
-            }}
-            onKeyDown={(e) => {
-              e.key === "Enter" && handleUpdateQuantity();
-            }}
           />
           <div className="absolute right-1 flex flex-col">
             <button disabled={isPendingProductQuantity} className="size-4 cursor-pointer hover:bg-zinc-100 hover:border flex justify-center items-center rounded" onClick={handleAddMore}>
-              <ChevronUp className="size-3.5" />
+              <ChevronUp className={twMerge("size-3.5", isPendingProductQuantity && "stroke-zinc-400")} />
             </button>
-            <button disabled={isPendingProductQuantity || cartItem.quantity <= 1} className="size-4 cursor-pointer hover:bg-zinc-100 hover:border flex justify-center items-center rounded" onClick={handleAddLess}>
-              <ChevronDown className="size-3.5" />
+            <button disabled={isPendingProductQuantity} className="size-4 cursor-pointer hover:bg-zinc-100 hover:border flex justify-center items-center rounded" onClick={handleAddLess}>
+              <ChevronDown className={twMerge("size-3.5", isPendingProductQuantity && "stroke-zinc-400")} />
             </button>
           </div>
         </div>
       </div>
-      <div className="w-[calc(100%/4)] flex items-center justify-center px-3">
-        <span>{currencyFormat(cartItem.product.originalPrice * cartItem.quantity)}</span>
-      </div>
-      <div className="px-4" onClick={(e) => e.stopPropagation()}>
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button size="icon" className="size-8 rounded" variant="destructive" disabled={isPendingRemoveCartItem}>
-              {isPendingRemoveCartItem ? <Spinner className="size-4 border-t-white" /> : <X />}
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Remover Produto do Carrinho</AlertDialogTitle>
-              <AlertDialogDescription>Você tem certeza que deseja remover esse produto do carrinho?</AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleRemoveCartItem}>Continue</AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </div>
+      <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+        <AlertDialogContent onClick={(e) => e.stopPropagation()}>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remover Produto do Carrinho</AlertDialogTitle>
+            <AlertDialogDescription>Você tem certeza que deseja remover esse produto do carrinho?</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleRemoveCartItem} disabled={isPendingRemoveCartItem}>
+              {isPendingRemoveCartItem && <Spinner className="size-5 border-t-white" />}
+              <span>Remover</span>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </article>
   );
 };

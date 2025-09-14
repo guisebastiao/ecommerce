@@ -1,15 +1,22 @@
+import { matchPath, Outlet, useLocation } from "react-router-dom";
+
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
-import { Outlet } from "react-router-dom";
+
+const PATCHS = ["/login", "/active-login/:code", "/register", "/register-successful", "/active-account/:verificationCode", "/forgot-password", "/recover-password/:code"];
 
 export const CommonRoutes = () => {
+  const location = useLocation();
+
+  const shouldActive = PATCHS.some((path) => matchPath({ path, end: true }, location.pathname));
+
   return (
     <>
-      <Header />
+      {!shouldActive && <Header />}
       <main className="max-w-7xl w-full min-h-[calc(100dvh-80px-190px)] mt-20">
         <Outlet />
       </main>
-      <Footer />
+      {!shouldActive && <Footer />}
     </>
   );
 };

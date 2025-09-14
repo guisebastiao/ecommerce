@@ -1,38 +1,40 @@
-import type { ProductQueryParams } from "@/types/productTypes";
-import { ProductItem } from "@/components/ProductItem";
-import { findAllProducts } from "@/hooks/useProduct";
+import type { OrderQueryParams } from "@/types/orderTypes";
+import ProductOrder from "@/components/ProductOrder";
 import { Pagination } from "@/components/Pagination";
 import { useSearchParams } from "react-router-dom";
+import { findAllOrders } from "@/hooks/useOrder";
 import { Spinner } from "@/components/Spinner";
 
-export const Home = () => {
+export const Order = () => {
   const [searchParams] = useSearchParams({
     offset: "1",
-    limit: "24",
+    limit: "20",
   });
 
   const params = Object.fromEntries(searchParams.entries()) as {
-    [K in keyof ProductQueryParams]: string;
+    [K in keyof OrderQueryParams]: string;
   };
 
-  const { data, isLoading } = findAllProducts(params);
+  const { data, isLoading } = findAllOrders(params);
+
+  console.log(data && data.data.items);
 
   return (
     <section className="w-full flex flex-col gap-6 py-4 md:px-6 px-3">
-      <h2 className="font-bold text-2xl">Explorar Produtos</h2>
+      <h2 className="font-bold text-2xl">Meus Pedidos</h2>
       {isLoading ? (
         <div className="flex justify-center">
           <Spinner className="size-5 border-t-black" />
         </div>
       ) : !data || data.data.paging.totalPages <= 0 ? (
         <div className="w-full flex flex-col items-center space-y-2">
-          <h3 className="font-bold text-center">Nenhum produto encontrado com esse critério de pesquisa</h3>
-          <p className="text-sm text-center">Tente novamente com outro termo para busca...</p>
+          <h3 className="font-bold text-center">Nenhum pedido encontrado</h3>
+          <p className="text-sm text-center">Faça sua primeira compra...</p>
         </div>
       ) : (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-2">
-          {data.data.items.map((product) => (
-            <ProductItem key={product.productId} product={product} />
+        <div className="flex flex-col gap-2">
+          {data.data.items.map((order) => (
+            <ProductOrder key={order.orderId} order={order} />
           ))}
         </div>
       )}

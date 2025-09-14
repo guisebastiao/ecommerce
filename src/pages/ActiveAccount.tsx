@@ -22,7 +22,7 @@ const ActiveAccount = () => {
     <section className="w-full h-[calc(100vh-80px-190px)] flex flex-col items-center justify-center gap-8 py-4 md:px-6 px-3">
       {isPending ? (
         <div className="flex items-center gap-2">
-          <Spinner className="size-5" />
+          <Spinner className="size-5 border-t-black" />
           <h1 className="text-xl font-medium">Ativando sua conta</h1>
         </div>
       ) : isSuccess ? (

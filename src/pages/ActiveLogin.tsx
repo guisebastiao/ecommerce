@@ -58,7 +58,7 @@ const ActiveLogin = () => {
           )}
         />
         <Button type="submit" className="max-w-xl w-full bg-primary-theme hover:bg-primary-theme-hover cursor-pointer">
-          {isPending ? <Spinner className="size-4 border-white border-t-transparent" /> : <span>Verificar</span>}
+          {isPending ? <Spinner className="size-4 border-t-white" /> : <span>Verificar</span>}
         </Button>
       </form>
     </section>
