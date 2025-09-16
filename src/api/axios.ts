@@ -18,6 +18,10 @@ const axiosRaw = axios.create({
   },
 });
 
+const dispatchEventLogout = () => {
+  window.dispatchEvent(new CustomEvent("logout"));
+};
+
 axios.interceptors.request.use(async (config) => {
   const storage = localStorage.getItem("auth");
 
@@ -30,7 +34,7 @@ axios.interceptors.request.use(async (config) => {
   const expiresRefresh = new Date(expiresRefreshToken);
 
   if (expiresRefresh <= now) {
-    localStorage.removeItem("auth");
+    dispatchEventLogout();
     return config;
   }
 
@@ -41,15 +45,29 @@ axios.interceptors.request.use(async (config) => {
       if (status === 200 && data?.data) {
         localStorage.setItem("auth", JSON.stringify(data.data));
       } else {
-        localStorage.removeItem("auth");
+        dispatchEventLogout();
       }
     } catch (error) {
-      localStorage.removeItem("auth");
+      dispatchEventLogout();
       return Promise.reject(error);
     }
   }
 
   return config;
 });
+
+axios.interceptors.response.use(
+  async (response) => response,
+  (error) => {
+    const header = error.response?.headers?.["expired-authentication"];
+    const isExpired: boolean = header?.toLowerCase() === "true";
+
+    if (isExpired) {
+      dispatchEventLogout();
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 export { axios };

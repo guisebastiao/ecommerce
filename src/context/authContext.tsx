@@ -24,6 +24,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const { mutate, isPending: logoutIsLoading } = logout();
 
+  const handleLogout = () => {
+    mutate();
+
+    setAuthenticated(false);
+    setClient(null);
+    localStorage.removeItem("auth");
+
+    return logoutIsLoading;
+  };
+
   useEffect(() => {
     const storage = localStorage.getItem("auth");
 
@@ -41,17 +51,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setAuthenticated(false);
       setClient(null);
     }
+
+    const logout = () => handleLogout();
+
+    window.addEventListener("logout", logout);
+
+    return () => {
+      window.removeEventListener("logout", logout);
+    };
   }, []);
-
-  const handleLogout = () => {
-    mutate();
-
-    setAuthenticated(false);
-    setClient(null);
-    localStorage.removeItem("auth");
-
-    return logoutIsLoading;
-  };
 
   return <AuthContext.Provider value={{ isAuthenticated, setAuthenticated, setClient, client, handleLogout, logoutIsLoading }}>{children}</AuthContext.Provider>;
 };

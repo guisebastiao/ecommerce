@@ -48,12 +48,18 @@ export const Header = () => {
   return (
     <header className="fixed top-0 left-0 w-full flex justify-center border-b h-20 z-50 bg-white">
       <div className="max-w-[1728px] w-full h-full flex justify-between items-center px-2 sm:gap-5 gap-3">
-        <h1 className="text-2xl font-black cursor-pointer select-none" onClick={() => navigate("/")}>
+        <h1
+          className="sm:text-xl sm:block hidden font-black cursor-pointer select-none"
+          onClick={() => navigate("/")}
+        >
           Ecommerce
         </h1>
         {shouldActive && (
           <Form {...searchForm}>
-            <form onSubmit={searchForm.handleSubmit(handleSearch)} className="max-w-lg w-full">
+            <form
+              onSubmit={searchForm.handleSubmit(handleSearch)}
+              className="max-w-lg w-full"
+            >
               <FormField
                 control={searchForm.control}
                 name="search"
@@ -66,14 +72,22 @@ export const Header = () => {
                           {...field}
                           autoComplete="off"
                           placeholder="O que você está procurando?"
-                          className="border-b-0 bg-zinc-100 placeholder:text-zinc-500 rounded sm:text-sm text-xs placeholder:font-normal pr-10"
+                          className="border-b-0 bg-zinc-100 placeholder:text-zinc-500 rounded text-sm placeholder:font-normal pr-10"
                         />
                         {searchParams.get("search") ? (
-                          <button type="button" className="absolute z-10 right-2 size-6 cursor-pointer" onClick={handleClearQueriesParams}>
+                          <button
+                            type="button"
+                            className="absolute z-10 right-2 size-6 cursor-pointer"
+                            onClick={handleClearQueriesParams}
+                          >
                             <X className=" size-5 text-zinc-800" />
                           </button>
                         ) : (
-                          <button type="button" className="absolute z-10 right-2 size-6 cursor-pointer" onClick={handleSearch}>
+                          <button
+                            type="button"
+                            className="absolute z-10 right-2 size-6 cursor-pointer"
+                            onClick={handleSearch}
+                          >
                             <Search className="size-5 text-zinc-800" />
                           </button>
                         )}
@@ -93,19 +107,32 @@ export const Header = () => {
         )}
         {isAuthenticated && (
           <div className="flex items-center gap-4">
-            <Button size="icon" variant="ghost" className="cursor-pointer sm:size-10 size-9 hover:bg-transparent" onClick={() => navigate("/favorites")}>
-              <Heart className="size-6" />
+            <Button
+              size="icon"
+              variant="ghost"
+              className="cursor-pointer size-9 hover:bg-transparent"
+              onClick={() => navigate("/favorites")}
+            >
+              <Heart className="size-5.5" />
             </Button>
-            <Button size="icon" variant="ghost" className="cursor-pointer sm:size-10 size-9 hover:bg-transparent" onClick={() => navigate("/cart")}>
-              <ShoppingCart className="size-6" />
+            <Button
+              size="icon"
+              variant="ghost"
+              className="cursor-pointer size-9 hover:bg-transparent"
+              onClick={() => navigate("/cart")}
+            >
+              <ShoppingCart className="size-5.5" />
             </Button>
-            <div className="size-9">
+            <div className="size-8">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Avatar className="flex size-9 cursor-pointer">
-                    <AvatarImage className="rounded-full" src={client?.clientPicture?.url} />
+                  <Avatar className="flex size-8 cursor-pointer">
+                    <AvatarImage
+                      className="rounded-full"
+                      src={client?.clientPicture?.url}
+                    />
                     <AvatarFallback>
-                      <div className="sm:size-9 flex items-center justify-center bg-primary-theme rounded-full">
+                      <div className="size-8 flex items-center justify-center bg-primary-theme rounded-full">
                         <User className="text-white" />
                       </div>
                     </AvatarFallback>
@@ -122,7 +149,10 @@ export const Header = () => {
                     <Bolt />
                     <span>Configurações</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleLogout} disabled={logoutIsLoading}>
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    disabled={logoutIsLoading}
+                  >
                     {logoutIsLoading ? <Spinner className="size-3.5 border-2 border-t-black" /> : <LogOut />}
                     <span>Sair</span>
                   </DropdownMenuItem>

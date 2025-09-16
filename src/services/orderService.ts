@@ -35,8 +35,18 @@ const confirmPayment = async (data: ConfirmPaymentRequestDTO): Promise<DefaultDT
   }
 };
 
+const cancelOrder = async ({ orderId }: { orderId: string }): Promise<DefaultDTO<null>> => {
+  try {
+    const response = await axios.post(`/orders/${orderId}/cancel`);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+  }
+};
+
 export const orderService = {
   createPayment,
   findAllOrders,
   confirmPayment,
+  cancelOrder,
 };

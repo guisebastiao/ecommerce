@@ -6,17 +6,17 @@ export interface OrderQueryParams {
 }
 
 export enum OrderStatus {
-  PENDING = "PENDING",
-  PENDING_PAYMENT = "PENDING_PAYMENT",
-  PAID = "PAID",
-  SHIPPED = "SHIPPED",
-  DELIVERED = "DELIVERED",
-  CANCELED = "CANCELED",
-  FAILED = "FAILED",
+  PENDING = "Pendente",
+  PENDING_PAYMENT = "Aguardando Pagamento",
+  PAID = "Pago",
+  SHIPPED = "Enviado",
+  DELIVERED = "Entregue",
+  CANCELED = "Cancelado",
+  FAILED = "Falha",
 }
 
 export enum PaymentMethod {
-  CARD = "CARD",
+  CARD = "Cartão de Crédito",
 }
 
 export interface PaymentDTO {
@@ -34,7 +34,8 @@ export interface OrderItemDTO {
 export interface OrderDTO {
   orderId: string;
   orderNumber: string;
-  orderStatus: OrderStatus;
-  paymentMethod: PaymentMethod;
+  orderStatus: keyof typeof OrderStatus;
+  paymentMethod: keyof typeof PaymentMethod;
+  total: number;
   items: OrderItemDTO[];
 }

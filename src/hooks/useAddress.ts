@@ -1,5 +1,4 @@
 import type { AddressRequestDTO } from "@/schemas/addressSchema";
-import type { AddressQueryParams } from "@/types/addressTypes";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { addressService } from "@/services/addressService";
 import { queryClient } from "@/context/queryContext";
@@ -18,12 +17,10 @@ export const createAddress = () => {
   });
 };
 
-export const findAllAddresses = (params: AddressQueryParams) => {
-  const { offset = "1", limit = "20" } = params;
-
+export const findAllAddresses = () => {
   return useQuery({
-    queryKey: ["find-all-addresses", offset, limit],
-    queryFn: () => addressService.findAllAddresses({ offset, limit }),
+    queryKey: ["find-all-addresses"],
+    queryFn: () => addressService.findAllAddresses(),
     throwOnError: (error: Error) => {
       toast.error(error.message);
       return false;

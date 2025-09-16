@@ -17,8 +17,6 @@ export const Order = () => {
 
   const { data, isLoading } = findAllOrders(params);
 
-  console.log(data && data.data.items);
-
   return (
     <section className="w-full flex flex-col gap-6 py-4 md:px-6 px-3">
       <h2 className="font-bold text-2xl">Meus Pedidos</h2>
@@ -34,7 +32,10 @@ export const Order = () => {
       ) : (
         <div className="flex flex-col gap-2">
           {data.data.items.map((order) => (
-            <ProductOrder key={order.orderId} order={order} />
+            <ProductOrder
+              key={order.orderId}
+              order={order}
+            />
           ))}
         </div>
       )}

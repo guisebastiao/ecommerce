@@ -1,6 +1,5 @@
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import type { AddressQueryParams } from "@/types/addressTypes";
+import { useLocation, useNavigate } from "react-router-dom";
 import { findAllAddresses } from "@/hooks/useAddress";
 import type { OrderDTO } from "@/types/orderTypes";
 import { confirmPayment } from "@/hooks/useOrder";
@@ -11,11 +10,6 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export const Payment = () => {
-  const [searchParams] = useSearchParams({
-    offset: "1",
-    limit: "20",
-  });
-
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state as OrderDTO;
@@ -26,16 +20,12 @@ export const Payment = () => {
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
   const [stripeLoading, setStripeLoading] = useState(false);
 
-  const params = Object.fromEntries(searchParams.entries()) as {
-    [K in keyof AddressQueryParams]: string;
-  };
-
-  const { data: addresses, isLoading: addressesLoading } = findAllAddresses(params);
+  const { data: addresses, isLoading: addressesLoading } = findAllAddresses();
   const { mutate: confirmPaymentMutate, isPending: confirmPaymentPending, isSuccess } = confirmPayment();
 
   useEffect(() => {
     if (!addressesLoading && addresses && addresses.data.length <= 0) {
-      navigate("/create-address");
+      navigate("/create-address?redirect=/cart");
     }
   }, [addressesLoading, addresses]);
 
@@ -80,10 +70,23 @@ export const Payment = () => {
         <header className="flex justify-between items-center py-5">
           <h2 className="font-medium text-lg">Pagamento</h2>
         </header>
-        <form onSubmit={handlePayment} className="flex flex-col gap-10">
+        <form
+          onSubmit={handlePayment}
+          className="flex flex-col gap-10"
+        >
           <div className="w-full flex flex-col gap-4">
             <h3 className="font-medium">Selecione o endereço</h3>
-            {addressesLoading ? <Spinner className="size-5 border-t-black" /> : addresses?.data.map((address) => <Address key={address.addressId} address={address} setSelectedAddress={setSelectedAddress} />)}
+            {addressesLoading ? (
+              <Spinner className="size-5 border-t-black" />
+            ) : (
+              addresses?.data.map((address) => (
+                <Address
+                  key={address.addressId}
+                  address={address}
+                  setSelectedAddress={setSelectedAddress}
+                />
+              ))
+            )}
           </div>
           <div className="w-full flex flex-col gap-4">
             <h3 className="font-medium">Pagamento com cartão</h3>
@@ -103,7 +106,11 @@ export const Payment = () => {
                 }}
               />
             </div>
-            <Button type="submit" disabled={confirmPaymentPending || !stripe || !elements} className="w-full mt-4 bg-primary-theme hover:bg-primary-theme-hover">
+            <Button
+              type="submit"
+              disabled={confirmPaymentPending || !stripe || !elements}
+              className="w-full mt-4 bg-primary-theme hover:bg-primary-theme-hover"
+            >
               {(confirmPaymentPending || stripeLoading) && <Spinner className="size-4 border-t-white" />}
               <span>Confirmar pagamento</span>
             </Button>

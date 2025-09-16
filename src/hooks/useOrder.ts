@@ -42,3 +42,16 @@ export const confirmPayment = () => {
     },
   });
 };
+
+export const cancelOrder = () => {
+  return useMutation({
+    mutationFn: (data: { orderId: string }) => orderService.cancelOrder(data),
+    onError(error: Error) {
+      toast.error(error.message);
+    },
+    onSuccess(data) {
+      toast.success(data.message);
+      queryClient.invalidateQueries({ queryKey: ["find-all-orders"] });
+    },
+  });
+};

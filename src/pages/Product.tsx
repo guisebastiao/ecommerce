@@ -1,14 +1,15 @@
+import { Carousel, CarouselContent, CarouselDots, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 import { addFavorite, removeFavorite } from "@/hooks/useFavorite";
 import { Heart, Star, TruckElectric, Undo2 } from "lucide-react";
-import { ProductDetail } from "@/components/ProductDetail";
 import { findProductById } from "@/hooks/useProduct";
 import { Separator } from "@/components/ui/separator";
+import { addProductToCart } from "@/hooks/useCart";
+import { Comments } from "@/components/Comments";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/Spinner";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import { Carousel, CarouselContent, CarouselDots, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 
 export const Product = () => {
   const { productId } = useParams();
@@ -18,6 +19,7 @@ export const Product = () => {
   const { data, isLoading } = findProductById({ productId: productId! });
 
   const { mutate: mutateAddFavorite, isPending: addFavoriteIsPending } = addFavorite();
+  const { mutate: mutateAddToCart, isPending: addToCartPending } = addProductToCart();
   const { mutate: mutateRemoveFavorite, isPending: removeFavoriteIsPending } = removeFavorite();
 
   useEffect(() => {
@@ -55,6 +57,10 @@ export const Product = () => {
     mutateRemoveFavorite({ productId: data.data.productId });
   };
 
+  const handleAddToCart = () => {
+    mutateAddToCart({ productId: productId!, quantity: 1 });
+  };
+
   return (
     <section className="w-full flex flex-col gap-6 py-4 px-3 md:px-6">
       {isLoading ? (
@@ -82,11 +88,22 @@ export const Product = () => {
                 ))}
               </div>
               <div className="flex-1 h-full">
-                <Carousel className="w-full h-full rounded bg-accent flex justify-center" setApi={setApi} opts={{ loop: true }}>
+                <Carousel
+                  className="w-full h-full rounded bg-accent flex justify-center"
+                  setApi={setApi}
+                  opts={{ loop: true }}
+                >
                   <CarouselContent className="h-full">
                     {data.data.productPictures.map((image, key) => (
-                      <CarouselItem key={key} className="relative h-full flex items-center justify-center rounded bg-accent">
-                        <img src={image.url} alt="banner-image" className="w-full h-full object-contain rounded p-2 bg-transparent mix-blend-multiply" />
+                      <CarouselItem
+                        key={key}
+                        className="relative h-full flex items-center justify-center rounded bg-accent"
+                      >
+                        <img
+                          src={image.url}
+                          alt="banner-image"
+                          className="w-full h-full object-contain rounded p-2 bg-transparent mix-blend-multiply"
+                        />
                       </CarouselItem>
                     ))}
                   </CarouselContent>
@@ -99,7 +116,17 @@ export const Product = () => {
               <div className="flex items-center gap-2">
                 <div className="flex">
                   {Array.from({ length: 5 }).map((_, index) =>
-                    Math.round(data.data.reviewRating!) <= index ? <Star key={index} className="size-4 fill-zinc-300 stroke-0" /> : <Star key={index} className="size-4 fill-yellow-400 stroke-0" />
+                    Math.round(data.data.reviewRating!) <= index ? (
+                      <Star
+                        key={index}
+                        className="size-4 fill-zinc-300 stroke-0"
+                      />
+                    ) : (
+                      <Star
+                        key={index}
+                        className="size-4 fill-yellow-400 stroke-0"
+                      />
+                    )
                   )}
                 </div>
                 <span className="text-sm tracking-wider text-zinc-500">({data.data.totalReviews} avaliações)</span>
@@ -117,12 +144,20 @@ export const Product = () => {
               <p className="text-sm text-justify">{data.data.description}</p>
               <Separator className="my-3 bg-zinc-400" />
               <div className="flex w-full gap-2">
-                <Button className="flex-1 bg-primary-theme hover:bg-primary-theme-hover cursor-pointer">Adicionar ao Carrinho</Button>
+                <Button
+                  className="flex-1 bg-primary-theme hover:bg-primary-theme-hover cursor-pointer"
+                  onClick={handleAddToCart}
+                  disabled={addToCartPending}
+                >
+                  {addToCartPending && <Spinner className="size-4 border-t-white" />}
+                  Adicionar ao Carrinho
+                </Button>
                 <Button
                   size="icon"
                   variant="outline"
                   className={twMerge("border border-zinc-500 cursor-pointer", data.data.isFavorite && "border-primary-theme")}
-                  onClick={() => (data.data.isFavorite ? handleRemoveFavorite() : handleAddFavorite())}>
+                  onClick={() => (data.data.isFavorite ? handleRemoveFavorite() : handleAddFavorite())}
+                >
                   {addFavoriteIsPending || removeFavoriteIsPending ? (
                     <Spinner className="size-4 border-t-black" />
                   ) : (
@@ -148,7 +183,7 @@ export const Product = () => {
               </div>
             </div>
           </div>
-          <ProductDetail product={data.data} />
+          <Comments />
         </>
       )}
     </section>
