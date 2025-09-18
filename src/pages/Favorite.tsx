@@ -18,7 +18,7 @@ export const Favorite = () => {
   const { data, isLoading } = findAllFavorites(params);
 
   return (
-    <section className="w-full flex flex-col gap-3 py-4 md:px-6 px-4">
+    <section className="w-full flex flex-col gap-3 py-4 px-4">
       <header className="flex justify-between items-center py-3">
         <h2 className="font-medium text-lg">Favoritos</h2>
       </header>
@@ -32,7 +32,7 @@ export const Favorite = () => {
           <p className="text-sm text-center">Adicione produtos na sua lista de favoritos...</p>
         </div>
       ) : (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-2 min-h-[calc(100vh-80px-190px+45px)]">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-2 flex-1">
           {data.data.items.map((product) => (
             <ProductItem key={product.productId} product={product} blockButtonAddToCart={true} />
           ))}

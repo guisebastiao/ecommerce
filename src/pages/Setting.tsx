@@ -1,3 +1,4 @@
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { twMerge } from "tailwind-merge";
@@ -7,6 +8,7 @@ import { ProfilePicture } from "@/components/settings/ProfilePicture";
 import { ChangePassword } from "@/components/settings/ChangePassword";
 import { CreateAddress } from "@/components/settings/CreateAddress";
 import { MyAddresses } from "@/components/settings/MyAddresses";
+import { Menu } from "lucide-react";
 
 export const Setting = () => {
   const renderComponent = new Map<string, React.FC>([
@@ -28,9 +30,28 @@ export const Setting = () => {
     <section className="w-full flex flex-col gap-3 py-4 md:px-6 px-4">
       <header className="flex justify-between items-center py-3">
         <h2 className="font-medium text-lg">Configurações</h2>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button size="icon" className="md:hidden size-8 flex">
+              <Menu />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>Gerenciar Minha Conta</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => setSearchParams({ tab: "my-account" })}>Minha Conta</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setSearchParams({ tab: "profile-picture" })}>Foto de Perfil</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setSearchParams({ tab: "change-password" })}> Redefinir Senha</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel>Gerenciar Endereços</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => setSearchParams({ tab: "create-address" })}>Criar Endereço</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setSearchParams({ tab: "my-addresses" })}>Meus Endereços</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </header>
-      <div className="flex gap-10 min-h-[calc(100vh-80px)]">
-        <nav className="max-w-3xs p-2">
+      <div className="flex gap-10 min-h-[calc(100vh-80px)] ">
+        <nav className="md:block hidden max-w-3xs p-2">
           <h3 className="text-[15px] font-semibold">Gerenciar Minha Conta</h3>
           <ul>
             <li className="text-[13px]">

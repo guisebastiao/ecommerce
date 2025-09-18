@@ -1,16 +1,15 @@
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { resetPasswordSchema } from "@/schemas/recoverPasswordSchema";
 import { resetPassword } from "@/hooks/useRecoverPassword";
+import { useNavigate, useParams } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/Spinner";
 import { Input } from "@/components/ui/input";
-import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
 
 export const RecoverPassword = () => {
-  const { mutate, isPending, isSuccess } = resetPassword();
+  const { mutate, isPending } = resetPassword();
   const navigate = useNavigate();
   const { code } = useParams();
 
@@ -24,17 +23,18 @@ export const RecoverPassword = () => {
   });
 
   const handleRecoverPassword = () => {
-    mutate({ code: code!, data: recoverPasswordForm.getValues() });
+    mutate(
+      { code: code!, data: recoverPasswordForm.getValues() },
+      {
+        onSuccess: () => {
+          navigate("/login");
+        },
+      }
+    );
   };
 
-  useEffect(() => {
-    if (isSuccess) {
-      navigate("/login");
-    }
-  }, [isSuccess]);
-
   return (
-    <section className="w-full h-[calc(100vh-80px-190px)] flex flex-col items-center justify-center gap-8 py-4 md:px-6 px-4">
+    <section className="w-full flex flex-col items-center justify-center gap-8 py-4 px-4">
       <Form {...recoverPasswordForm}>
         <form onSubmit={recoverPasswordForm.handleSubmit(handleRecoverPassword)} className="max-w-xl w-full flex flex-col gap-8">
           <div className="space-y-3">

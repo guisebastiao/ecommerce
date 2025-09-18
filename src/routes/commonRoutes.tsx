@@ -13,7 +13,7 @@ export const CommonRoutes = () => {
   return (
     <>
       {!shouldActive && <Header />}
-      <main className="max-w-7xl w-full min-h-[calc(100dvh-80px-190px)] mt-20">
+      <main className="max-w-7xl w-full min-h-[calc(100dvh-80px)] flex mt-20">
         <Outlet />
       </main>
       {!shouldActive && <Footer />}

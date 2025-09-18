@@ -20,20 +20,14 @@ export const Payment = () => {
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
   const [stripeLoading, setStripeLoading] = useState(false);
 
-  const { data: addresses, isLoading: addressesLoading } = findAllAddresses();
-  const { mutate: confirmPaymentMutate, isPending: confirmPaymentPending, isSuccess } = confirmPayment();
+  const { data: addresses, isLoading: addressesLoading, isFetching } = findAllAddresses();
+  const { mutate: confirmPaymentMutate, isPending: confirmPaymentPending } = confirmPayment();
 
   useEffect(() => {
-    if (!addressesLoading && addresses && addresses.data.length <= 0) {
+    if (!isFetching && !addressesLoading && addresses && addresses.data.length <= 0) {
       navigate("/create-address?redirect=/payment", { state });
     }
-  }, [addressesLoading, addresses]);
-
-  useEffect(() => {
-    if (isSuccess) {
-      navigate("/orders");
-    }
-  }, [isSuccess]);
+  }, [addressesLoading, addresses, isFetching]);
 
   const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,11 +55,18 @@ export const Payment = () => {
       return;
     }
 
-    confirmPaymentMutate({ orderId: state.orderId, stripePaymentId: paymentMethod.id });
+    confirmPaymentMutate(
+      { orderId: state.orderId, stripePaymentId: paymentMethod.id },
+      {
+        onSuccess: () => {
+          navigate("/orders");
+        },
+      }
+    );
   };
 
   return (
-    <div className="w-full flex flex-col gap-3 py-4 md:px-6 px-4 min-h-[calc(100vh-80px)]">
+    <div className="w-full flex flex-col gap-3 py-4 px-4">
       <header className="flex justify-between items-center py-3">
         <h2 className="font-medium text-lg">Pagamento</h2>
       </header>

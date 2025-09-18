@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MaskedInput } from "../MaskedInput";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { Spinner } from "../Spinner";
 
 export const MyAccount = () => {
   const { client, setClient } = useContextAuth();
@@ -29,25 +29,23 @@ export const MyAccount = () => {
     },
   });
 
-  const { mutate, isPending, isSuccess, data } = updateAccount();
+  const { mutate, isPending } = updateAccount();
 
   const handleUpdateAccount = async () => {
-    mutate(updateAccountSchema.parse(updateAccountForm.getValues()));
+    mutate(updateAccountSchema.parse(updateAccountForm.getValues()), {
+      onSuccess: (data) => {
+        const storage = localStorage.getItem("auth");
+        const auth: ActiveLoginDTO = JSON.parse(storage!);
+
+        auth.client = data.data;
+
+        const newStorage = JSON.stringify(auth);
+        localStorage.setItem("auth", newStorage);
+
+        setClient(data.data);
+      },
+    });
   };
-
-  useEffect(() => {
-    if (isSuccess) {
-      const storage = localStorage.getItem("auth");
-      const auth: ActiveLoginDTO = JSON.parse(storage!);
-
-      auth.client = data.data;
-
-      const newStorage = JSON.stringify(auth);
-      localStorage.setItem("auth", newStorage);
-
-      setClient(data.data);
-    }
-  }, [isSuccess]);
 
   return (
     <Form {...updateAccountForm}>
@@ -106,7 +104,8 @@ export const MyAccount = () => {
           )}
         />
         <Button type="submit" className="w-full bg-primary-theme hover:bg-primary-theme-hover cursor-pointer" disabled={isPending}>
-          Salvar
+          {isPending && <Spinner className="size-4 border-t-white" />}
+          <span>Salvar</span>
         </Button>
       </form>
     </Form>

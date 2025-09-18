@@ -1,6 +1,5 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { deleteComment } from "@/hooks/useComment";
-import { useEffect } from "react";
 
 interface DeleteCommentProps {
   isOpen: boolean;
@@ -9,17 +8,18 @@ interface DeleteCommentProps {
 }
 
 export const DeleteComment = ({ isOpen, setIsOpen, commentId }: DeleteCommentProps) => {
-  const { mutate, isPending, isSuccess } = deleteComment();
+  const { mutate, isPending } = deleteComment();
 
   const handleDeleteComment = () => {
-    mutate({ commentId });
+    mutate(
+      { commentId },
+      {
+        onSuccess: () => {
+          setIsOpen(false);
+        },
+      }
+    );
   };
-
-  useEffect(() => {
-    if (isSuccess) {
-      setIsOpen(false);
-    }
-  }, [isSuccess]);
 
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>

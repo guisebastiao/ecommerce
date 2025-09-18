@@ -15,6 +15,18 @@ export const updateAccount = () => {
   });
 };
 
+export const updatePassword = () => {
+  return useMutation({
+    mutationFn: (data: updatePasswordRequestDTO) => clientService.updatePassword(data),
+    onError(error: Error) {
+      toast.error(error.message);
+    },
+    onSuccess(data) {
+      toast.success(data.message);
+    },
+  });
+};
+
 export const uploadProfilePicture = () => {
   return useMutation({
     mutationFn: (data: ProfilePictureRequestDTO) => clientService.uploadProfilePicture(data),
@@ -27,9 +39,9 @@ export const uploadProfilePicture = () => {
   });
 };
 
-export const updatePassword = () => {
+export const deleteProfilePicture = () => {
   return useMutation({
-    mutationFn: (data: updatePasswordRequestDTO) => clientService.updatePassword(data),
+    mutationFn: () => clientService.deleteProfilePicture(),
     onError(error: Error) {
       toast.error(error.message);
     },

@@ -7,7 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/Spinner";
 import { activeLogin } from "@/hooks/useAuth";
-import { useEffect } from "react";
 
 export const ActiveLogin = () => {
   const { code } = useParams();
@@ -16,7 +15,7 @@ export const ActiveLogin = () => {
 
   const navigate = useNavigate();
 
-  const { mutate, isPending, isSuccess, data } = activeLogin();
+  const { mutate, isPending } = activeLogin();
 
   const activeLoginForm = useForm({
     resolver: zodResolver(activeLoginSchema),
@@ -27,20 +26,18 @@ export const ActiveLogin = () => {
   });
 
   const handleActiveLogin = () => {
-    mutate(activeLoginForm.getValues());
+    mutate(activeLoginForm.getValues(), {
+      onSuccess: (data) => {
+        localStorage.setItem("auth", JSON.stringify(data.data));
+        setAuthenticated(true);
+        setClient(data.data.client);
+        navigate("/");
+      },
+    });
   };
 
-  useEffect(() => {
-    if (isSuccess) {
-      localStorage.setItem("auth", JSON.stringify(data.data));
-      setAuthenticated(true);
-      setClient(data.data.client);
-      navigate("/");
-    }
-  }, [isSuccess]);
-
   return (
-    <section className="w-full h-[calc(100vh-80px-190px)] flex flex-col items-center justify-center gap-8 py-4 md:px-6 px-4">
+    <section className="w-full flex flex-col items-center justify-center gap-8 py-4 px-4">
       <h1 className="text-4xl text-center font-medium">Ativar Login</h1>
       <p className="max-w-xl text-center">Digite abaixo o código de 6 dígitos que enviamos para o seu e-mail. Esse código é necessário para confirmar sua identidade e garantir a segurança da sua conta.</p>
       <form onSubmit={activeLoginForm.handleSubmit(handleActiveLogin)} className="w-full flex flex-col items-center gap-6">

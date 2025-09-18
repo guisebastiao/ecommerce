@@ -1,17 +1,21 @@
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { addressSchema } from "@/schemas/addressSchema";
 import { MaskedInput } from "@/components/MaskedInput";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createAddress } from "@/hooks/useAddress";
+import type { OrderDTO } from "@/types/orderTypes";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/Spinner";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
 
 export const CreateAddress = () => {
-  const { mutate, isPending, isSuccess } = createAddress();
+  const { mutate, isPending } = createAddress();
+
+  const location = useLocation();
+
+  const state = location.state as OrderDTO;
 
   const [searchParams] = useSearchParams();
   const redirect = searchParams.get("redirect");
@@ -33,18 +37,18 @@ export const CreateAddress = () => {
     },
   });
 
-  useEffect(() => {
-    if (isSuccess && redirect) {
-      navigate(redirect);
-    }
-  }, [isSuccess]);
-
   const handleCreateAddress = () => {
-    mutate(addressForm.getValues());
+    mutate(addressForm.getValues(), {
+      onSuccess: () => {
+        if (redirect) {
+          navigate(redirect, { state });
+        }
+      },
+    });
   };
 
   return (
-    <section className="w-full h-[calc(100vh-80px-190px)] flex justify-center items-center gap-6 py-4 md:px-6 px-4">
+    <section className="w-full flex justify-center items-center gap-6 py-4 px-4">
       <Form {...addressForm}>
         <form onSubmit={addressForm.handleSubmit(handleCreateAddress)} className="max-w-xl w-full flex flex-col gap-8">
           <div className="space-y-3">

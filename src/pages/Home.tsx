@@ -18,7 +18,7 @@ export const Home = () => {
   const { data, isLoading } = findAllProducts(params);
 
   return (
-    <section className="w-full flex flex-col gap-3 py-4 md:px-6 px-4 min-h-[calc(100vh-80px)]">
+    <section className="w-full flex flex-col gap-3 py-4 px-4">
       <header className="flex justify-between items-center py-3">
         <h2 className="font-medium text-lg">Explorar Produtos</h2>
       </header>
@@ -32,7 +32,7 @@ export const Home = () => {
           <p className="text-sm text-center">Tente novamente com outro termo para busca...</p>
         </div>
       ) : (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-2">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] flex-1 gap-2">
           {data.data.items.map((product) => (
             <ProductItem key={product.productId} product={product} />
           ))}

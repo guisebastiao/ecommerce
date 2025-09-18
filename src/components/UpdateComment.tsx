@@ -8,7 +8,6 @@ import { updateComment } from "@/hooks/useComment";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { Spinner } from "./Spinner";
-import { useEffect } from "react";
 
 interface UpdateCommentProps {
   isOpen: boolean;
@@ -17,7 +16,7 @@ interface UpdateCommentProps {
 }
 
 const UpdateComment = ({ isOpen, setIsOpen, comment }: UpdateCommentProps) => {
-  const { mutate, isPending, isSuccess } = updateComment();
+  const { mutate, isPending } = updateComment();
 
   const updateCommentForm = useForm({
     resolver: zodResolver(commentSchema),
@@ -27,12 +26,6 @@ const UpdateComment = ({ isOpen, setIsOpen, comment }: UpdateCommentProps) => {
     },
   });
 
-  useEffect(() => {
-    if (isSuccess) {
-      setIsOpen(false);
-    }
-  }, [isSuccess]);
-
   const handleUpdateComment = () => {
     mutate(
       {
@@ -40,7 +33,9 @@ const UpdateComment = ({ isOpen, setIsOpen, comment }: UpdateCommentProps) => {
         data: updateCommentForm.getValues(),
       },
       {
-        onSuccess: () => updateCommentForm.reset(),
+        onSuccess: () => {
+          updateCommentForm.reset(), setIsOpen(false);
+        },
       }
     );
   };

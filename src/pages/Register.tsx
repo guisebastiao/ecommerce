@@ -9,10 +9,9 @@ import { Input } from "@/components/ui/input";
 import { register } from "@/hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { LogIn } from "lucide-react";
-import { useEffect } from "react";
 
 export const Register = () => {
-  const { mutate, isPending, isSuccess } = register();
+  const { mutate, isPending } = register();
   const navigate = useNavigate();
 
   const registerForm = useForm({
@@ -32,17 +31,15 @@ export const Register = () => {
 
   const handleRegister = () => {
     const data = registerSchema.parse(registerForm.getValues());
-    mutate(data);
+    mutate(data, {
+      onSuccess: () => {
+        navigate(`/register-successful`);
+      },
+    });
   };
 
-  useEffect(() => {
-    if (isSuccess) {
-      navigate(`/register-successful`);
-    }
-  }, [isSuccess]);
-
   return (
-    <section className="w-full flex justify-center items-center gap-6 py-10 md:px-6 px-4">
+    <section className="w-full flex justify-center items-center gap-6 py-10 px-4">
       <Form {...registerForm}>
         <form onSubmit={registerForm.handleSubmit(handleRegister)} className="max-w-xl w-full flex flex-col gap-8">
           <div className="space-y-3">

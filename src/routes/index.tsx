@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { PrivateRoutes } from "@/routes/privateRoutes";
 import { PublicRoutes } from "@/routes/publicRoutes";
 import { CommonRoutes } from "@/routes/commonRoutes";
+import { AdminRoutes } from "./adminRoutes";
 
 import { RegisterSuccessful } from "@/pages/RegisterSuccessful";
 import { RecoverPassword } from "@/pages/RecoverPassword";
@@ -17,6 +18,7 @@ import { Payment } from "@/pages/Payment";
 import { Setting } from "@/pages/Setting";
 import { Login } from "@/pages/Login";
 import { Order } from "@/pages/Order";
+import { Admin } from "@/pages/Admin";
 import { Home } from "@/pages/Home";
 import { Cart } from "@/pages/Cart";
 
@@ -83,6 +85,15 @@ export const router = createBrowserRouter([
           {
             path: "/settings",
             element: <Setting />,
+          },
+        ],
+      },
+      {
+        element: <AdminRoutes />,
+        children: [
+          {
+            path: "/admin",
+            element: <Admin />,
           },
         ],
       },

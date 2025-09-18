@@ -10,16 +10,17 @@ export const ActiveAccount = () => {
   const { mutate, isPending, isSuccess, isError } = activeRegister();
 
   useEffect(() => {
-    mutate({ verificationCode: verificationCode! });
+    mutate(
+      { verificationCode: verificationCode! },
+      {
+        onSuccess: () => navigate("/login"),
+        onError: () => navigate("/register"),
+      }
+    );
   }, []);
 
-  useEffect(() => {
-    if (isSuccess) navigate("/login");
-    if (isError) navigate("/register");
-  }, [isSuccess, isError]);
-
   return (
-    <section className="w-full h-[calc(100vh-80px-190px)] flex flex-col items-center justify-center gap-8 py-4 md:px-6 px-4">
+    <section className="w-full h-[calc(100vh-80px-190px)] flex flex-col items-center justify-center gap-8 py-4 px-4">
       {isPending ? (
         <div className="flex items-center gap-2">
           <Spinner className="size-5 border-t-black" />

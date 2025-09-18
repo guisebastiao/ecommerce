@@ -2,7 +2,7 @@ import { Github, Linkedin, Mail } from "lucide-react";
 
 export const Footer = () => {
   return (
-    <footer className="w-full border-t bg-muted/50 flex items-center flex-col">
+    <footer className="relative w-full border-t bg-muted/50 flex items-center flex-col">
       <div className="flex max-w-6xl w-full md:justify-between md:items-center px-5 py-5 gap-5 md:flex-row flex-col">
         <div className="w-full">
           <h2 className="text-xl font-bold">Ecommerce</h2>

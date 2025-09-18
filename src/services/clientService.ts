@@ -14,6 +14,16 @@ const updateAccount = async (data: UpdateAccountRequestDTO): Promise<DefaultDTO<
   }
 };
 
+const updatePassword = async (data: updatePasswordRequestDTO): Promise<DefaultDTO<null>> => {
+  try {
+    const response = await axios.put(`/clients/update-password`, data);
+
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+  }
+};
+
 const uploadProfilePicture = async (data: ProfilePictureRequestDTO): Promise<DefaultDTO<ClientPictureDTO>> => {
   try {
     const response = await axios.post(`/client-picture`, data, {
@@ -28,9 +38,9 @@ const uploadProfilePicture = async (data: ProfilePictureRequestDTO): Promise<Def
   }
 };
 
-const updatePassword = async (data: updatePasswordRequestDTO): Promise<DefaultDTO<null>> => {
+const deleteProfilePicture = async (): Promise<DefaultDTO<null>> => {
   try {
-    const response = await axios.put(`/clients/update-password`, data);
+    const response = await axios.delete(`/client-picture`);
 
     return response.data;
   } catch (error) {
@@ -40,6 +50,7 @@ const updatePassword = async (data: updatePasswordRequestDTO): Promise<DefaultDT
 
 export const clientService = {
   updateAccount,
-  uploadProfilePicture,
   updatePassword,
+  uploadProfilePicture,
+  deleteProfilePicture,
 };

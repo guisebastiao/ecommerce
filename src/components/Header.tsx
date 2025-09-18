@@ -1,5 +1,5 @@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Bolt, Heart, ListFilter, LogIn, LogOut, Package, Search, ShoppingCart, User, X } from "lucide-react";
+import { Bolt, BrickWallShield, Heart, ListFilter, LogIn, LogOut, Package, Search, ShoppingCart, User, X } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { matchPath, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
@@ -11,8 +11,9 @@ import { Button } from "@/components/ui/button";
 import { categories } from "@/utils/categories";
 import { Spinner } from "@/components/Spinner";
 import { Input } from "@/components/ui/input";
-import { useEffect, useState } from "react";
+import { Role } from "@/types/clientTypes";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 
 const SEARCH_PATHS = ["/"];
 
@@ -24,10 +25,6 @@ export const Header = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
-
-  useEffect(() => {
-    handleFilter();
-  }, [filter]);
 
   const searchForm = useForm({
     resolver: zodResolver(searchSchema),
@@ -54,20 +51,19 @@ export const Header = () => {
     });
   };
 
-  const handleFilter = () => {
-    if (filter === "clear") {
+  const handleFilter = (param: string) => {
+    if (param === "clear") {
       setSearchParams((params) => {
         params.delete("category");
         return params;
       });
-
-      return;
+    } else {
+      setSearchParams((params) => {
+        params.set("category", param);
+        params.set("offset", "1");
+        return params;
+      });
     }
-
-    setSearchParams((params) => {
-      params.set("category", filter);
-      return params;
-    });
   };
 
   return (
@@ -102,7 +98,12 @@ export const Header = () => {
                             </button>
                           )}
                         </div>
-                        <Select onValueChange={setFilter} defaultValue={filter}>
+                        <Select
+                          onValueChange={(value) => {
+                            setFilter(value);
+                            handleFilter(value);
+                          }}
+                          defaultValue={filter}>
                           <SelectTrigger className="w-9 p-0 justify-center [&>span]:sr-only">
                             <ListFilter />
                             <SelectValue />
@@ -144,7 +145,7 @@ export const Header = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Avatar className="flex size-8.5 cursor-pointer">
-                    <AvatarImage className="rounded-full" src={client?.clientPicture?.url} />
+                    <AvatarImage className="rounded-full size-full object-cover" src={client?.clientPicture?.url} />
                     <AvatarFallback>
                       <div className="size-8.5 flex items-center justify-center bg-primary-theme rounded-full">
                         <User className="text-white" />
@@ -163,6 +164,12 @@ export const Header = () => {
                     <Bolt />
                     <span>Configurações</span>
                   </DropdownMenuItem>
+                  {client?.role === Role.ADMIN && (
+                    <DropdownMenuItem onClick={() => navigate("/admin")}>
+                      <BrickWallShield />
+                      <span>Administração</span>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem onClick={handleLogout} disabled={logoutIsLoading}>
                     {logoutIsLoading ? <Spinner className="size-3.5 border-2 border-t-black" /> : <LogOut />}
                     <span>Sair</span>

@@ -5,19 +5,12 @@ import { createPayment } from "@/hooks/useOrder";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "@/components/Spinner";
-import { useEffect } from "react";
 
 export const Cart = () => {
   const navigate = useNavigate();
 
   const { data, isLoading } = findAllCartItems();
-  const { mutate, data: paymentData, isPending, isSuccess } = createPayment();
-
-  useEffect(() => {
-    if (isSuccess) {
-      navigate("/payment", { state: paymentData.data });
-    }
-  }, [isSuccess]);
+  const { mutate, isPending } = createPayment();
 
   const currencyFormat = (value: number) => {
     return new Intl.NumberFormat("pt-br", {
@@ -27,11 +20,18 @@ export const Cart = () => {
   };
 
   const handlePayment = () => {
-    mutate({ paymentMethod: "CARD" });
+    mutate(
+      { paymentMethod: "CARD" },
+      {
+        onSuccess: ({ data }) => {
+          navigate("/payment", { state: data });
+        },
+      }
+    );
   };
 
   return (
-    <section className="w-full flex flex-col gap-3 py-4 md:px-6 px-4 min-h-[calc(100vh-80px)]">
+    <section className="w-full flex flex-col gap-3 py-4 px-4">
       <header className="flex justify-between items-center py-3">
         <h2 className="font-medium text-lg">Carrinho</h2>
       </header>
@@ -40,7 +40,7 @@ export const Cart = () => {
           <Spinner className="size-5 border-t-black" />
         </div>
       ) : !data || data.data.cartItems.length <= 0 ? (
-        <div className="w-full border rounded-md p-8">
+        <div className="w-full rounded-md">
           <div className="flex flex-col items-center space-y-2">
             <h3 className="font-bold text-center">Nenhum produto encontrado em seu carrinho</h3>
             <p className="text-sm text-center text-gray-500">Adicione produtos em seu carrinho...</p>

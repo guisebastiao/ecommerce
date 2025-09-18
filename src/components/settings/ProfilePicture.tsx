@@ -1,8 +1,8 @@
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { deleteProfilePicture, uploadProfilePicture } from "@/hooks/useClient";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { profilePictureSchema } from "@/schemas/clientSchema";
 import { acceptMimetypes } from "@/utils/acceptMimetypes";
-import { uploadProfilePicture } from "@/hooks/useClient";
 import type { ActiveLoginDTO } from "@/types/authTypes";
 import { useContextAuth } from "@/context/authContext";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,7 +19,8 @@ export const ProfilePicture = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
-  const { mutate, isPending, isSuccess, data } = uploadProfilePicture();
+  const { mutate: mutateUploadProfilePicture, isPending: pendingUploadProfilePicture } = uploadProfilePicture();
+  const { mutate: mutateDeleteProfilePicture, isPending: pendingDeleteProfilePicture } = deleteProfilePicture();
 
   const uploadProfilePictureForm = useForm({
     resolver: zodResolver(profilePictureSchema),
@@ -30,7 +31,38 @@ export const ProfilePicture = () => {
   });
 
   const handleUploadProfilePicture = () => {
-    mutate(uploadProfilePictureForm.getValues());
+    mutateUploadProfilePicture(uploadProfilePictureForm.getValues(), {
+      onSuccess: (data) => {
+        const storage = localStorage.getItem("auth");
+        const auth: ActiveLoginDTO = JSON.parse(storage!);
+
+        if (data && data.data) {
+          auth.client.clientPicture = data.data;
+        }
+
+        const newStorage = JSON.stringify(auth);
+        localStorage.setItem("auth", newStorage);
+
+        setClient(auth.client);
+      },
+    });
+  };
+
+  const handleDeleteProfilePicture = () => {
+    mutateDeleteProfilePicture(undefined, {
+      onSuccess: () => {
+        const storage = localStorage.getItem("auth");
+        const auth: ActiveLoginDTO = JSON.parse(storage!);
+
+        auth.client.clientPicture = null;
+
+        const newStorage = JSON.stringify(auth);
+        localStorage.setItem("auth", newStorage);
+
+        setPreview(null);
+        setClient(auth.client);
+      },
+    });
   };
 
   const file = uploadProfilePictureForm.watch("file");
@@ -45,20 +77,6 @@ export const ProfilePicture = () => {
       setPreview(null);
     }
   }, [file]);
-
-  useEffect(() => {
-    if (isSuccess) {
-      const storage = localStorage.getItem("auth");
-      const auth: ActiveLoginDTO = JSON.parse(storage!);
-
-      auth.client.clientPicture = data.data;
-
-      const newStorage = JSON.stringify(auth);
-      localStorage.setItem("auth", newStorage);
-
-      setClient(auth.client);
-    }
-  }, [isSuccess]);
 
   return (
     <Form {...uploadProfilePictureForm}>
@@ -87,8 +105,22 @@ export const ProfilePicture = () => {
                       }
                     }}
                   />
+                  <div className="w-full flex justify-center py-4">
+                    <div className="relative size-32 flex items-center justify-center overflow-hidden rounded border">
+                      {(preview || client.clientPicture?.url) && <img className="absolute size-full aspect-square opacity-50 object-cover" src={preview ? preview : client.clientPicture?.url} alt="profile" />}
+                      {!preview && !client.clientPicture?.url && <div className="size-full absolute opacity-50 bg-primary-theme" />}
+                      <Avatar className="flex size-32 cursor-pointer z-10">
+                        <AvatarImage className="size-full object-cover" src={preview ? preview : client.clientPicture?.url} />
+                        <AvatarFallback>
+                          <div className="size-32 flex items-center justify-center bg-primary-theme rounded-full">
+                            <User className="size-16 text-white" />
+                          </div>
+                        </AvatarFallback>
+                      </Avatar>
+                    </div>
+                  </div>
                   <label htmlFor="file" className="w-full">
-                    <Button type="button" className="w-full" onClick={() => inputRef.current?.click()}>
+                    <Button type="button" variant="secondary" className="w-full" disabled={pendingUploadProfilePicture || pendingDeleteProfilePicture} onClick={() => inputRef.current?.click()}>
                       <Upload className="size-4" />
                       <span>Selecionar Imagem</span>
                     </Button>
@@ -99,20 +131,15 @@ export const ProfilePicture = () => {
             </FormItem>
           )}
         />
-
-        <div className="w-full flex justify-center py-4">
-          <Avatar className="flex size-32 cursor-pointer">
-            <AvatarImage src={preview ? preview : client.clientPicture?.url} />
-            <AvatarFallback>
-              <div className="size-32 flex items-center justify-center bg-primary-theme rounded-full">
-                <User className="size-16 text-white" />
-              </div>
-            </AvatarFallback>
-          </Avatar>
-        </div>
-
-        <Button type="submit" className="w-full bg-primary-theme hover:bg-primary-theme-hover cursor-pointer" disabled={uploadProfilePictureForm.watch("file") === undefined || isPending}>
-          {isPending && <Spinner className="size-4 border-t-white" />}
+        <Button type="button" className="w-full" disabled={pendingDeleteProfilePicture || !client.clientPicture?.url} onClick={handleDeleteProfilePicture}>
+          {pendingDeleteProfilePicture && <Spinner className="size-4 border-t-white" />}
+          <span>Excluir Foto de Perfil</span>
+        </Button>
+        <Button
+          type="submit"
+          className="w-full bg-primary-theme hover:bg-primary-theme-hover cursor-pointer"
+          disabled={uploadProfilePictureForm.watch("file") === undefined || pendingUploadProfilePicture || pendingDeleteProfilePicture}>
+          {pendingUploadProfilePicture && <Spinner className="size-4 border-t-white" />}
           <span>Enviar Foto de Perfil</span>
         </Button>
       </form>

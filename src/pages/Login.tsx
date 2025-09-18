@@ -8,10 +8,9 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { login } from "@/hooks/useAuth";
 import { LogIn } from "lucide-react";
-import { useEffect } from "react";
 
 export const Login = () => {
-  const { mutate, isPending, isSuccess, data } = login();
+  const { mutate, isPending } = login();
   const navigate = useNavigate();
 
   const loginForm = useForm({
@@ -24,17 +23,15 @@ export const Login = () => {
   });
 
   const handleLogin = () => {
-    mutate(loginForm.getValues());
+    mutate(loginForm.getValues(), {
+      onSuccess: ({ data }) => {
+        navigate(`/active-login/${data.code}`);
+      },
+    });
   };
 
-  useEffect(() => {
-    if (isSuccess) {
-      navigate(`/active-login/${data.data.code}`);
-    }
-  }, [isSuccess]);
-
   return (
-    <section className="w-full h-[calc(100vh-80px-190px)] flex justify-center items-center gap-6 py-4 md:px-6 px-4">
+    <section className="w-full flex justify-center items-center gap-6 py-4 px-4">
       <Form {...loginForm}>
         <form onSubmit={loginForm.handleSubmit(handleLogin)} className="max-w-xl w-full flex flex-col gap-8">
           <div className="space-y-3">
