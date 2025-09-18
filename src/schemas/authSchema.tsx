@@ -40,7 +40,10 @@ export const registerSchema = z
     phone: z
       .string()
       .nonempty("Informe seu número de telefone")
-      .regex(/^\d{13}$/, "Número de telefone inválido"),
+      .transform((val) => val.replace(/\D/g, ""))
+      .refine((val) => /^\d{13}$/.test(val), {
+        message: "Número de telefone inválido",
+      }),
     birth: z
       .string()
       .nonempty("Informe sua data de nascimento")

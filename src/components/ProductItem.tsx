@@ -53,7 +53,7 @@ export const ProductItem = ({ product, blockButtonAddToCart = false }: ProductIt
   return (
     <article className="relative h-[360px] overflow-hidden rounded cursor-pointer border" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} onClick={handleNavigateToProduct}>
       <button
-        className={twMerge("absolute right-2 top-2 flex justify-center items-center size-9 bg-white rounded-full border z-50 cursor-pointer hover:scale-105 opacity-0 transition-all", isHovered && "opacity-100")}
+        className={twMerge("absolute right-2 top-2 flex justify-center items-center size-9 bg-white rounded-full border z-40 cursor-pointer hover:scale-105 opacity-0 transition-all", isHovered && "opacity-100")}
         disabled={isPendingAddFavorite || isPendingRemoveFavorite}
         onClick={(e) => {
           product.isFavorite ? handleRemoveFavorite(e) : handleAddFavorite(e);
@@ -61,7 +61,7 @@ export const ProductItem = ({ product, blockButtonAddToCart = false }: ProductIt
         <Heart className={twMerge("size-5 transition-all", product.isFavorite ? "stroke-primary-theme fill-primary-theme" : "fill-transparent")} />
       </button>
       <div className="relative w-full h-[250px] bg-accent rounded">
-        <img src={product.productPictures[0].url} className="absolute size-full object-contain rounded bg-transparent mix-blend-multiply p-3" alt="product-picture" />
+        <img src={product.productPictures?.[0]?.url} className="absolute size-full object-contain rounded bg-transparent mix-blend-multiply p-3" alt="product-picture" />
       </div>
       <div className="flex flex-col gap-1 px-1.5">
         <p className="text-base font-medium line-clamp-1 mt-1.5">{product.name}</p>

@@ -64,14 +64,14 @@ export const ProductCartItem = ({ cartItem }: ProductCartItemProps) => {
   };
 
   return (
-    <article className="w-full h-24 overflow-hidden rounded shadow-[0_0_10px_rgba(230,230,232,0.5)] flex items-center px-5" onClick={handleNavigateToProduct}>
-      <div className="w-[calc(100%-128px-224px)] flex items-center px-3">
+    <article className="w-full h-24 rounded-md flex items-center sm:justify-start justify-between gap-3 px-3 cursor-pointer overflow-hidden border" onClick={handleNavigateToProduct}>
+      <div className="flex sm:w-[calc(100%-90px-72px-24px-24px)] justify-start items-center">
         <div className="size-18 flex-shrink-0 relative rounded">
           <img src={cartItem.product.productPictures[0].url} className="absolute size-full object-contain rounded bg-transparent mix-blend-multiply p-2" alt="product-picture" />
         </div>
-        <span className="flex-1 text-[15px] font-medium truncate">{cartItem.product.name}</span>
+        <span className="flex-1 text-[15px] font-medium truncate sm:block hidden">{cartItem.product.name}</span>
       </div>
-      <div className="w-32 flex items-center justify-center px-3">
+      <div className="flex items-center justify-center px-3">
         {cartItem.product.price ? (
           <div className="flex gap-1 items-center">
             <span className="text-[15px] text-primary-theme">{cartItem.product.price}</span>
@@ -81,8 +81,8 @@ export const ProductCartItem = ({ cartItem }: ProductCartItemProps) => {
           <span className="text-[15px]">{currencyFormat(cartItem.product.originalPrice)}</span>
         )}
       </div>
-      <div className="w-56 flex items-center justify-center px-3">
-        <div className="relative flex items-center" onClick={(e) => e.stopPropagation()}>
+      <div className="flex items-center justify-center px-3">
+        <div className="relative flex items-center cursor-default" onClick={(e) => e.stopPropagation()}>
           <Input
             disabled={true}
             type="number"

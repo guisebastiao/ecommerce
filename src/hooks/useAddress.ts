@@ -27,3 +27,29 @@ export const findAllAddresses = () => {
     },
   });
 };
+
+export const updateAddress = () => {
+  return useMutation({
+    mutationFn: (data: { addressId: string; data: AddressRequestDTO }) => addressService.updateAddress(data),
+    onError(error: Error) {
+      toast.error(error.message);
+    },
+    onSuccess(data) {
+      queryClient.invalidateQueries({ queryKey: ["find-all-addresses"] });
+      toast.success(data.message);
+    },
+  });
+};
+
+export const deleteAddress = () => {
+  return useMutation({
+    mutationFn: (data: { addressId: string }) => addressService.deleteAddress(data),
+    onError(error: Error) {
+      toast.error(error.message);
+    },
+    onSuccess(data) {
+      queryClient.invalidateQueries({ queryKey: ["find-all-addresses"] });
+      toast.success(data.message);
+    },
+  });
+};

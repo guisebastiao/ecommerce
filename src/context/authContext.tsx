@@ -8,7 +8,7 @@ interface AuthProviderProps {
 }
 
 interface AuthContextType {
-  isAuthenticated: boolean;
+  isAuthenticated: boolean | null;
   setAuthenticated: (isAuthenticated: boolean) => void;
   setClient: (client: ClientSimpleDTO | null) => void;
   client: ClientSimpleDTO | null;
@@ -19,7 +19,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [isAuthenticated, setAuthenticated] = useState<boolean>(false);
+  const [isAuthenticated, setAuthenticated] = useState<boolean | null>(null);
   const [client, setClient] = useState<ClientSimpleDTO | null>(null);
 
   const { mutate, isPending: logoutIsLoading } = logout();

@@ -1,9 +1,10 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { BriefcaseConveyorBelt, CircleDollarSign, CreditCard, Package, PackageCheck, PackageX, ShoppingBasket, Truck } from "lucide-react";
+import { ArrowRight, BriefcaseConveyorBelt, CircleDollarSign, CreditCard, Package, PackageCheck, PackageX, ShoppingBasket, Truck } from "lucide-react";
 import { OrderStatus, PaymentMethod, type OrderDTO } from "@/types/orderTypes";
 import { getEnumValue } from "@/utils/getEnumString";
-import { Button } from "./ui/button";
+import { useNavigate } from "react-router-dom";
 import { cancelOrder } from "@/hooks/useOrder";
+import { Button } from "./ui/button";
 import { Spinner } from "./Spinner";
 
 interface ProductOrderProps {
@@ -11,6 +12,8 @@ interface ProductOrderProps {
 }
 
 const ProductOrder = ({ order }: ProductOrderProps) => {
+  const navigate = useNavigate();
+
   const { mutate, isPending } = cancelOrder();
 
   const currencyFormat = (value: number) => {
@@ -49,44 +52,36 @@ const ProductOrder = ({ order }: ProductOrderProps) => {
             <span className="text-[13px] font-medium text-zinc-700">{currencyFormat(order.total)}</span>
           </div>
         </div>
-
         {order.orderStatus === "PENDING_PAYMENT" && (
-          <AlertDialog>
-            <AlertDialogTrigger>
-              <Button
-                variant="destructive"
-                className="text-[13px]"
-                size="sm"
-              >
-                {isPending ? <Spinner className="size-4 border-t-white" /> : <PackageX />}
-                <span>Cancelar Compra</span>
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Cancelar Compra</AlertDialogTitle>
-                <AlertDialogDescription>Você tem certeza que deseja cancelar essa compra?</AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Não</AlertDialogCancel>
-                <AlertDialogAction onClick={handleCancelOrder}>Sim</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          <div className="flex gap-1">
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" className="size-8" size="icon">
+                  {isPending ? <Spinner className="size-4 border-t-white" /> : <PackageX />}
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Cancelar Compra</AlertDialogTitle>
+                  <AlertDialogDescription>Você tem certeza que deseja cancelar essa compra?</AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Não</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleCancelOrder}>Sim</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+            <Button className="size-8" size="icon" onClick={() => navigate(`/payment`, { state: order })}>
+              <ArrowRight />
+            </Button>
+          </div>
         )}
       </div>
       <div className="flex flex-col gap-2 py-4">
         {order.items.map(({ product, quantity, orderItemId }) => (
-          <div
-            className="flex w-full gap-3"
-            key={orderItemId}
-          >
+          <div key={orderItemId} className="flex w-full gap-3 cursor-pointer" onClick={() => navigate(`/product/${product.productId}`)}>
             <div className="size-18 flex-shrink-0 relative rounded">
-              <img
-                src={product.productPictures[0].url}
-                className="absolute size-full object-contain rounded bg-transparent mix-blend-multiply p-2"
-                alt="product-picture"
-              />
+              <img src={product.productPictures[0].url} className="absolute size-full object-contain rounded bg-transparent mix-blend-multiply p-2" alt="product-picture" />
             </div>
             <div className="flex flex-col justify-center gap-2 w-[calc(100%-10.5rem)]">
               <span className="text-[15px] font-medium truncate">{product.name}</span>

@@ -1,7 +1,6 @@
 import type { ClientSimpleDTO } from "./clientTypes";
 
 export interface CommentQueryParams {
-  productId: string;
   offset: string;
   limit: string;
 }

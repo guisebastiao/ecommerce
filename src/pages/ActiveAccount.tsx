@@ -3,7 +3,7 @@ import { activeRegister } from "@/hooks/useAuth";
 import { Spinner } from "@/components/Spinner";
 import { useEffect } from "react";
 
-const ActiveAccount = () => {
+export const ActiveAccount = () => {
   const { verificationCode } = useParams();
   const navigate = useNavigate();
 
@@ -19,7 +19,7 @@ const ActiveAccount = () => {
   }, [isSuccess, isError]);
 
   return (
-    <section className="w-full h-[calc(100vh-80px-190px)] flex flex-col items-center justify-center gap-8 py-4 md:px-6 px-3">
+    <section className="w-full h-[calc(100vh-80px-190px)] flex flex-col items-center justify-center gap-8 py-4 md:px-6 px-4">
       {isPending ? (
         <div className="flex items-center gap-2">
           <Spinner className="size-5 border-t-black" />
@@ -35,5 +35,3 @@ const ActiveAccount = () => {
     </section>
   );
 };
-
-export default ActiveAccount;

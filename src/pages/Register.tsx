@@ -42,7 +42,7 @@ export const Register = () => {
   }, [isSuccess]);
 
   return (
-    <section className="w-full flex justify-center items-center gap-6 py-10 md:px-6 px-3">
+    <section className="w-full flex justify-center items-center gap-6 py-10 md:px-6 px-4">
       <Form {...registerForm}>
         <form onSubmit={registerForm.handleSubmit(handleRegister)} className="max-w-xl w-full flex flex-col gap-8">
           <div className="space-y-3">
@@ -78,7 +78,7 @@ export const Register = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <MaskedInput {...field} type="text" mask="(00) 00 00000-0000" placeholder="Telefone" autoComplete="off" className="px-0" />
+                  <MaskedInput {...field} type="text" mask="+00 (00) 00000-0000" placeholder="Telefone" autoComplete="off" className="px-0" />
                 </FormControl>
                 {registerForm.formState.errors.phone?.message && <FormMessage>{registerForm.formState.errors.phone.message}</FormMessage>}
               </FormItem>

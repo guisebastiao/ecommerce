@@ -18,8 +18,10 @@ export const Order = () => {
   const { data, isLoading } = findAllOrders(params);
 
   return (
-    <section className="w-full flex flex-col gap-6 py-4 md:px-6 px-3">
-      <h2 className="font-bold text-2xl">Meus Pedidos</h2>
+    <section className="w-full flex flex-col gap-3 py-4 md:px-6 px-4">
+      <header className="flex justify-between items-center py-3">
+        <h2 className="font-medium text-lg">Meus Pedidos</h2>
+      </header>
       {isLoading ? (
         <div className="flex justify-center">
           <Spinner className="size-5 border-t-black" />
@@ -30,12 +32,9 @@ export const Order = () => {
           <p className="text-sm text-center">Faça sua primeira compra...</p>
         </div>
       ) : (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 min-h-[calc(100vh-80px)]">
           {data.data.items.map((order) => (
-            <ProductOrder
-              key={order.orderId}
-              order={order}
-            />
+            <ProductOrder key={order.orderId} order={order} />
           ))}
         </div>
       )}

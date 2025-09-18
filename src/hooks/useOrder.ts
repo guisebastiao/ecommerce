@@ -39,6 +39,7 @@ export const confirmPayment = () => {
     onSuccess(data) {
       toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ["find-all-cart-items"] });
+      queryClient.invalidateQueries({ queryKey: ["find-all-orders"] });
     },
   });
 };

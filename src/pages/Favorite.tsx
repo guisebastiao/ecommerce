@@ -5,7 +5,7 @@ import { Pagination } from "@/components/Pagination";
 import { useSearchParams } from "react-router-dom";
 import { Spinner } from "@/components/Spinner";
 
-const Favorite = () => {
+export const Favorite = () => {
   const [searchParams] = useSearchParams({
     offset: "1",
     limit: "24",
@@ -18,8 +18,8 @@ const Favorite = () => {
   const { data, isLoading } = findAllFavorites(params);
 
   return (
-    <section className="w-full flex flex-col gap-6 py-4 md:px-6 px-3">
-      <header className="flex justify-between items-center py-5">
+    <section className="w-full flex flex-col gap-3 py-4 md:px-6 px-4">
+      <header className="flex justify-between items-center py-3">
         <h2 className="font-medium text-lg">Favoritos</h2>
       </header>
       {isLoading ? (
@@ -42,5 +42,3 @@ const Favorite = () => {
     </section>
   );
 };
-
-export default Favorite;

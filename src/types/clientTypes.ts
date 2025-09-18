@@ -7,6 +7,8 @@ export interface ClientSimpleDTO {
   clientId: string;
   name: string;
   surname: string;
+  phone: string;
+  birth: string;
   role: Role;
   clientPicture: ClientPictureDTO | null;
 }

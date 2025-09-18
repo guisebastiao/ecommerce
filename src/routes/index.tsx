@@ -3,21 +3,22 @@ import { PrivateRoutes } from "@/routes/privateRoutes";
 import { PublicRoutes } from "@/routes/publicRoutes";
 import { CommonRoutes } from "@/routes/commonRoutes";
 
-import { Product } from "@/pages/Product";
-import { Home } from "@/pages/Home";
-import { Login } from "@/pages/Login";
-import { NotFound } from "@/pages/NotFound";
-import ActiveLogin from "@/pages/ActiveLogin";
-import { Register } from "@/pages/Register";
-import RegisterSuccessful from "@/pages/RegisterSuccessful";
-import ActiveAccount from "@/pages/ActiveAccount";
-import ForgotPassword from "@/pages/ForgotPassword";
-import RecoverPassword from "@/pages/RecoverPassword";
-import Favorite from "@/pages/Favorite";
-import Cart from "@/pages/Cart";
-import { Payment } from "@/pages/Payment";
+import { RegisterSuccessful } from "@/pages/RegisterSuccessful";
+import { RecoverPassword } from "@/pages/RecoverPassword";
+import { ForgotPassword } from "@/pages/ForgotPassword";
 import { CreateAddress } from "@/pages/CreateAddress";
+import { ActiveAccount } from "@/pages/ActiveAccount";
+import { ActiveLogin } from "@/pages/ActiveLogin";
+import { NotFound } from "@/pages/NotFound";
+import { Register } from "@/pages/Register";
+import { Favorite } from "@/pages/Favorite";
+import { Product } from "@/pages/Product";
+import { Payment } from "@/pages/Payment";
+import { Setting } from "@/pages/Setting";
+import { Login } from "@/pages/Login";
 import { Order } from "@/pages/Order";
+import { Home } from "@/pages/Home";
+import { Cart } from "@/pages/Cart";
 
 export const router = createBrowserRouter([
   {
@@ -78,6 +79,10 @@ export const router = createBrowserRouter([
           {
             path: "/orders",
             element: <Order />,
+          },
+          {
+            path: "/settings",
+            element: <Setting />,
           },
         ],
       },
