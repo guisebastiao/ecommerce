@@ -1,7 +1,22 @@
+import type { CreateProductRequestDTO, UpdateProductRequestDTO } from "@/schemas/productSchema";
 import type { ProductQueryParams } from "@/types/productTypes";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { productService } from "@/services/productService";
-import { useQuery } from "@tanstack/react-query";
+import { queryClient } from "@/context/queryContext";
 import { toast } from "sonner";
+
+export const createProduct = () => {
+  return useMutation({
+    mutationFn: (data: CreateProductRequestDTO) => productService.createProduct(data),
+    onError(error: Error) {
+      toast.error(error.message);
+    },
+    onSuccess(data) {
+      queryClient.invalidateQueries({ queryKey: ["find-all-products"] });
+      toast.success(data.message);
+    },
+  });
+};
 
 export const findAllProducts = (params: ProductQueryParams) => {
   const { search = "", category = "", offset = "1", limit = "20" } = params;
@@ -23,6 +38,32 @@ export const findProductById = ({ productId }: { productId: string }) => {
     throwOnError: (error: Error) => {
       toast.error(error.message);
       return false;
+    },
+  });
+};
+
+export const updateProduct = () => {
+  return useMutation({
+    mutationFn: (data: { productId: string; data: UpdateProductRequestDTO }) => productService.updateProduct(data),
+    onError(error: Error) {
+      toast.error(error.message);
+    },
+    onSuccess(data) {
+      queryClient.invalidateQueries({ queryKey: ["find-all-products"] });
+      toast.success(data.message);
+    },
+  });
+};
+
+export const deleteProduct = () => {
+  return useMutation({
+    mutationFn: (data: { productId: string }) => productService.deleteProduct(data),
+    onError(error: Error) {
+      toast.error(error.message);
+    },
+    onSuccess(data) {
+      queryClient.invalidateQueries({ queryKey: ["find-all-products"] });
+      toast.success(data.message);
     },
   });
 };

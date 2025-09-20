@@ -4,21 +4,23 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { matchPath, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { findAllCategories } from "@/hooks/useCategory";
 import { useContextAuth } from "@/context/authContext";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { searchSchema } from "@/schemas/searchSchema";
 import { Button } from "@/components/ui/button";
-import { categories } from "@/utils/categories";
 import { Spinner } from "@/components/Spinner";
 import { Input } from "@/components/ui/input";
 import { Role } from "@/types/clientTypes";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 
-const SEARCH_PATHS = ["/"];
+const SEARCH_PATHS = ["/", "/admin"];
 
 export const Header = () => {
   const { isAuthenticated, client, handleLogout, logoutIsLoading } = useContextAuth();
+
+  const { data, isPending } = findAllCategories();
 
   const [filter, setFilter] = useState("clear");
 
@@ -104,7 +106,7 @@ export const Header = () => {
                             handleFilter(value);
                           }}
                           defaultValue={filter}>
-                          <SelectTrigger className="w-9 p-0 justify-center [&>span]:sr-only">
+                          <SelectTrigger className="w-9 p-0 justify-center [&>span]:sr-only border">
                             <ListFilter />
                             <SelectValue />
                           </SelectTrigger>
@@ -112,11 +114,15 @@ export const Header = () => {
                             <SelectItem defaultChecked className="mb-1" value="clear">
                               Sem Filtro
                             </SelectItem>
-                            {categories.map((category, index) => (
-                              <SelectItem key={index} value={category} className="capitalize">
-                                {category}
-                              </SelectItem>
-                            ))}
+                            {isPending ? (
+                              <Spinner className="size-5 border-t-black" />
+                            ) : (
+                              data?.data.map((category) => (
+                                <SelectItem key={category.categoryId} value={category.name} className="capitalize">
+                                  {category.name}
+                                </SelectItem>
+                              ))
+                            )}
                           </SelectContent>
                         </Select>
                       </div>

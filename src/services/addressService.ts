@@ -1,10 +1,10 @@
-import type { DefaultDTO, PageResponseDTO } from "@/types/default";
 import type { AddressRequestDTO } from "@/schemas/addressSchema";
 import { handleAxiosError } from "@/utils/handleAxiosError";
 import type { AddressDTO } from "@/types/addressTypes";
+import type { DefaultDTO } from "@/types/default";
 import { axios } from "@/api/axios";
 
-const createAddress = async (data: AddressRequestDTO): Promise<DefaultDTO<PageResponseDTO<null>>> => {
+const createAddress = async (data: AddressRequestDTO): Promise<DefaultDTO<null>> => {
   try {
     const response = await axios.post("/addresses", data);
 
@@ -24,7 +24,7 @@ const findAllAddresses = async (): Promise<DefaultDTO<AddressDTO[]>> => {
   }
 };
 
-const updateAddress = async ({ addressId, data }: { addressId: string; data: AddressRequestDTO }): Promise<DefaultDTO<PageResponseDTO<null>>> => {
+const updateAddress = async ({ addressId, data }: { addressId: string; data: AddressRequestDTO }): Promise<DefaultDTO<null>> => {
   try {
     const response = await axios.put(`/addresses/${addressId}`, data);
 
@@ -34,7 +34,7 @@ const updateAddress = async ({ addressId, data }: { addressId: string; data: Add
   }
 };
 
-const deleteAddress = async ({ addressId }: { addressId: string }): Promise<DefaultDTO<PageResponseDTO<null>>> => {
+const deleteAddress = async ({ addressId }: { addressId: string }): Promise<DefaultDTO<null>> => {
   try {
     const response = await axios.delete(`/addresses/${addressId}`);
 

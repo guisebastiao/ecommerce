@@ -27,7 +27,7 @@ export const Setting = () => {
   const ActiveComponent = renderComponent.get(activeTab ?? "my-account");
 
   return (
-    <section className="w-full flex flex-col gap-3 py-4 md:px-6 px-4">
+    <section className="w-full flex flex-col gap-3 py-4 px-4">
       <header className="flex justify-between items-center py-3">
         <h2 className="font-medium text-lg">Configurações</h2>
         <DropdownMenu>
@@ -50,7 +50,7 @@ export const Setting = () => {
           </DropdownMenuContent>
         </DropdownMenu>
       </header>
-      <div className="flex gap-10 min-h-[calc(100vh-80px)] ">
+      <div className="flex gap-10">
         <nav className="md:block hidden max-w-3xs p-2">
           <h3 className="text-[15px] font-semibold">Gerenciar Minha Conta</h3>
           <ul>
