@@ -1,6 +1,6 @@
 export interface DiscountDTO {
   discountId: string;
-  String: string;
+  name: string;
   percent: number;
   endDate: string;
 }

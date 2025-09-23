@@ -1,17 +1,24 @@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Edit2, Package, Trash2, Plus, ImageIcon, DollarSign, Package2, Tag, EllipsisVertical } from "lucide-react";
+import { Edit2, Package, Trash2, Plus, ImageIcon, DollarSign, Package2, Tag, EllipsisVertical, TicketPercent, TicketX } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { ProductDTO, ProductQueryParams } from "@/types/productTypes";
+import { Pagination } from "@/components/Pagination";
 import { findAllProducts } from "@/hooks/useProduct";
 import { useSearchParams } from "react-router-dom";
-import { CreateProduct } from "../CreateProduct";
-import { UpdateProduct } from "../UpdateProduct";
-import { DeleteProduct } from "../DeleteProduct";
+import { CreateProduct } from "./CreateProduct";
+import { UpdateProduct } from "./UpdateProduct";
+import { DeleteProduct } from "./DeleteProduct";
+import { ApplyDiscount } from "./ApplyDiscount";
+import { RemoveDiscount } from "./RemoveDiscount";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/Spinner";
 import { Badge } from "@/components/ui/badge";
-import { Pagination } from "../Pagination";
-import { Spinner } from "../Spinner";
 import { useState } from "react";
+
+export interface DialogProps {
+  isOpen: boolean;
+  product: ProductDTO | null;
+}
 
 export const ManageProduct = () => {
   const [searchParams] = useSearchParams({
@@ -19,10 +26,23 @@ export const ManageProduct = () => {
     limit: "20",
   });
 
-  const [selectProduct, setSelectProduct] = useState<ProductDTO | null>(null);
   const [createDialog, setCreateDialog] = useState(false);
-  const [updateDialog, setUpdateDialog] = useState(false);
-  const [deleteDialog, setDeleteDialog] = useState(false);
+  const [applyDiscountDialog, setApplyDiscountDialog] = useState<DialogProps>({
+    isOpen: false,
+    product: null,
+  });
+  const [removeDiscountDialog, setRemoveDiscountDialog] = useState<DialogProps>({
+    isOpen: false,
+    product: null,
+  });
+  const [updateDialog, setUpdateDialog] = useState<DialogProps>({
+    isOpen: false,
+    product: null,
+  });
+  const [deleteDialog, setDeleteDialog] = useState<DialogProps>({
+    isOpen: false,
+    product: null,
+  });
 
   const params = Object.fromEntries(searchParams.entries()) as {
     [K in keyof ProductQueryParams]: string;
@@ -50,13 +70,31 @@ export const ManageProduct = () => {
   };
 
   const handleUpdateProduct = (product: ProductDTO) => {
-    setUpdateDialog(true);
-    setSelectProduct(product);
+    setUpdateDialog({
+      isOpen: true,
+      product,
+    });
   };
 
   const handleDeleteProduct = (product: ProductDTO) => {
-    setDeleteDialog(true);
-    setSelectProduct(product);
+    setDeleteDialog({
+      isOpen: true,
+      product,
+    });
+  };
+
+  const handleApplyDiscount = (product: ProductDTO) => {
+    setApplyDiscountDialog({
+      isOpen: true,
+      product,
+    });
+  };
+
+  const handleRemoveDiscount = (product: ProductDTO) => {
+    setRemoveDiscountDialog({
+      isOpen: true,
+      product,
+    });
   };
 
   return (
@@ -73,7 +111,10 @@ export const ManageProduct = () => {
                 <p className="text-sm text-muted-foreground mt-1">Gerencie todos os produtos da sua loja</p>
               </div>
             </div>
-            <Button onClick={() => setCreateDialog(true)} className="gap-2">
+            <Button
+              onClick={() => setCreateDialog(true)}
+              className="gap-2"
+            >
               <Plus className="size-4" />
               Novo Produto
             </Button>
@@ -93,7 +134,10 @@ export const ManageProduct = () => {
               </div>
               <h3 className="font-semibold text-lg mb-2">Nenhum produto encontrado</h3>
               <p className="text-muted-foreground text-center max-w-md">Não há produtos cadastrados ou que correspondam aos critérios de busca.</p>
-              <Button onClick={() => setCreateDialog(true)} className="mt-4 gap-2">
+              <Button
+                onClick={() => setCreateDialog(true)}
+                className="mt-4 gap-2"
+              >
                 <Plus className="size-4" />
                 Criar primeiro produto
               </Button>
@@ -101,7 +145,10 @@ export const ManageProduct = () => {
           ) : (
             <div className="divide-y">
               {data.data.items.map((product) => (
-                <div key={product.productId} className="p-6 hover:bg-muted/50 transition-colors">
+                <div
+                  key={product.productId}
+                  className="p-6 hover:bg-muted/50 transition-colors"
+                >
                   <div className="flex items-start gap-4">
                     <div className="relative">
                       <img
@@ -115,7 +162,10 @@ export const ManageProduct = () => {
                       />
                       {product.stock === 0 && (
                         <div className="absolute inset-0 bg-black/50 rounded-md flex items-center justify-center">
-                          <Badge variant="destructive" className="text-xs">
+                          <Badge
+                            variant="destructive"
+                            className="text-xs"
+                          >
                             Esgotado
                           </Badge>
                         </div>
@@ -137,6 +187,16 @@ export const ManageProduct = () => {
                             <DropdownMenuContent>
                               <DropdownMenuLabel>Gerenciar Produto</DropdownMenuLabel>
                               <DropdownMenuSeparator />
+                              <DropdownMenuItem onClick={() => handleApplyDiscount(product)}>
+                                <TicketPercent className="size-4" />
+                                <span>Aplicar Desconto</span>
+                              </DropdownMenuItem>
+                              {product.discount && (
+                                <DropdownMenuItem onClick={() => handleRemoveDiscount(product)}>
+                                  <TicketX className="size-4" />
+                                  <span>Remover Desconto</span>
+                                </DropdownMenuItem>
+                              )}
                               <DropdownMenuItem onClick={() => handleUpdateProduct(product)}>
                                 <Edit2 className="size-4" />
                                 <span>Editar</span>
@@ -172,7 +232,10 @@ export const ManageProduct = () => {
                             <p className="text-sm text-muted-foreground">Estoque</p>
                             <div className="flex items-center gap-2">
                               <span className="font-semibold">{product.stock}</span>
-                              <Badge variant={getStockBadgeVariant(product.stock)} className="text-xs">
+                              <Badge
+                                variant={getStockBadgeVariant(product.stock)}
+                                className="text-xs"
+                              >
                                 {getStockText(product.stock)}
                               </Badge>
                             </div>
@@ -206,14 +269,30 @@ export const ManageProduct = () => {
           <Pagination paging={data.data.paging} />
         </div>
       )}
-
-      <CreateProduct isOpen={createDialog} setIsOpen={setCreateDialog} />
-      {selectProduct && (
-        <>
-          <UpdateProduct product={selectProduct} isOpen={updateDialog} setIsOpen={setUpdateDialog} />
-          <DeleteProduct product={selectProduct} isOpen={deleteDialog} setIsOpen={setDeleteDialog} />
-        </>
-      )}
+      <CreateProduct
+        isOpen={createDialog}
+        setIsOpen={setCreateDialog}
+      />
+      <ApplyDiscount
+        product={applyDiscountDialog.product}
+        isOpen={applyDiscountDialog.isOpen}
+        setIsOpen={(isOpen) => setApplyDiscountDialog({ isOpen, product: isOpen ? applyDiscountDialog.product : null })}
+      />
+      <RemoveDiscount
+        product={removeDiscountDialog.product}
+        isOpen={removeDiscountDialog.isOpen}
+        setIsOpen={(isOpen) => setRemoveDiscountDialog({ isOpen, product: isOpen ? applyDiscountDialog.product : null })}
+      />
+      <UpdateProduct
+        product={updateDialog.product}
+        isOpen={updateDialog.isOpen}
+        setIsOpen={(isOpen) => setUpdateDialog({ isOpen, product: isOpen ? updateDialog.product : null })}
+      />
+      <DeleteProduct
+        product={deleteDialog.product}
+        isOpen={deleteDialog.isOpen}
+        setIsOpen={(isOpen) => setDeleteDialog({ isOpen, product: isOpen ? updateDialog.product : null })}
+      />
     </div>
   );
 };

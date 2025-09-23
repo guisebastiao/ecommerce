@@ -1,22 +1,22 @@
-import { forwardRef, type InputHTMLAttributes } from "react";
 import { IMaskInput, type IMaskInputProps } from "react-imask";
 import { twMerge } from "tailwind-merge";
+import { forwardRef } from "react";
 
-export interface MaskedInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "mask"> {
-  mask: string;
-}
+export type MaskedInputProps = IMaskInputProps<HTMLInputElement> & {
+  className?: string;
+  unmask?: "typed" | "raw" | boolean;
+};
 
-export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(({ mask, className, onChange, ...props }, ref) => {
+export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(({ className, onChange, ...props }, ref) => {
   return (
     <IMaskInput
-      {...(props as IMaskInputProps<HTMLInputElement>)}
-      mask={mask as any}
+      {...props}
       inputRef={ref}
       onAccept={(_value, maskRef) => {
         onChange?.({
           target: {
             name: (props as any).name,
-            value: maskRef.unmaskedValue,
+            value: maskRef.unmaskedValue || maskRef.value,
           },
         } as unknown as React.ChangeEvent<HTMLInputElement>);
       }}

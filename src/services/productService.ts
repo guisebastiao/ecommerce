@@ -1,4 +1,4 @@
-import type { CreateProductRequestDTO, UpdateProductRequestDTO } from "@/schemas/productSchema";
+import type { ApplyDiscountRequestDTO, CreateProductRequestDTO, UpdateProductRequestDTO } from "@/schemas/productSchema";
 import type { ProductDTO, ProductQueryParams } from "@/types/productTypes";
 import type { DefaultDTO, PageResponseDTO } from "@/types/default";
 import { handleAxiosError } from "@/utils/handleAxiosError";
@@ -21,6 +21,16 @@ const createProduct = async (data: CreateProductRequestDTO): Promise<DefaultDTO<
         "Content-Type": "multipart/form-data",
       },
     });
+
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+  }
+};
+
+const applyDiscount = async (data: ApplyDiscountRequestDTO): Promise<DefaultDTO<null>> => {
+  try {
+    const response = await axios.post("/products/apply-discount", data);
 
     return response.data;
   } catch (error) {
@@ -69,10 +79,22 @@ const deleteProduct = async ({ productId }: { productId: string }): Promise<Defa
   }
 };
 
+const removeDiscount = async ({ productId }: { productId: string }): Promise<DefaultDTO<null>> => {
+  try {
+    const response = await axios.delete(`/products/${productId}/remove-discount`);
+
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+  }
+};
+
 export const productService = {
   createProduct,
+  applyDiscount,
   findAllProducts,
   findProductById,
   updateProduct,
   deleteProduct,
+  removeDiscount,
 };

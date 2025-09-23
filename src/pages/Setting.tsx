@@ -2,13 +2,13 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { twMerge } from "tailwind-merge";
+import { Menu } from "lucide-react";
 
 import { MyAccount } from "@/components/settings/MyAccount";
 import { ProfilePicture } from "@/components/settings/ProfilePicture";
 import { ChangePassword } from "@/components/settings/ChangePassword";
 import { CreateAddress } from "@/components/settings/CreateAddress";
 import { MyAddresses } from "@/components/settings/MyAddresses";
-import { Menu } from "lucide-react";
 
 export const Setting = () => {
   const renderComponent = new Map<string, React.FC>([
@@ -32,7 +32,10 @@ export const Setting = () => {
         <h2 className="font-medium text-lg">Configurações</h2>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button size="icon" className="md:hidden size-8 flex">
+            <Button
+              size="icon"
+              className="md:hidden size-8 flex"
+            >
               <Menu />
             </Button>
           </DropdownMenuTrigger>
@@ -55,17 +58,29 @@ export const Setting = () => {
           <h3 className="text-[15px] font-semibold">Gerenciar Minha Conta</h3>
           <ul>
             <li className="text-[13px]">
-              <Button variant="link" className={twMerge("text-zinc-500", activeTab === "my-account" && "text-primary-theme")} onClick={() => setSearchParams({ tab: "my-account" })}>
+              <Button
+                variant="link"
+                className={twMerge("text-zinc-500", activeTab === "my-account" && "text-primary-theme")}
+                onClick={() => setSearchParams({ tab: "my-account" })}
+              >
                 Minha Conta
               </Button>
             </li>
             <li className="text-[13px]">
-              <Button variant="link" className={twMerge("text-zinc-500", activeTab === "profile-picture" && "text-primary-theme")} onClick={() => setSearchParams({ tab: "profile-picture" })}>
+              <Button
+                variant="link"
+                className={twMerge("text-zinc-500", activeTab === "profile-picture" && "text-primary-theme")}
+                onClick={() => setSearchParams({ tab: "profile-picture" })}
+              >
                 Foto de Perfil
               </Button>
             </li>
             <li className="text-[13px]">
-              <Button variant="link" className={twMerge("text-zinc-500", activeTab === "change-password" && "text-primary-theme")} onClick={() => setSearchParams({ tab: "change-password" })}>
+              <Button
+                variant="link"
+                className={twMerge("text-zinc-500", activeTab === "change-password" && "text-primary-theme")}
+                onClick={() => setSearchParams({ tab: "change-password" })}
+              >
                 Redefinir Senha
               </Button>
             </li>
@@ -73,12 +88,20 @@ export const Setting = () => {
           <h3 className="text-[15px] font-semibold mt-3">Gerenciar Endereços</h3>
           <ul>
             <li className="text-[13px]">
-              <Button variant="link" className={twMerge("text-zinc-500", activeTab === "create-address" && "text-primary-theme")} onClick={() => setSearchParams({ tab: "create-address" })}>
+              <Button
+                variant="link"
+                className={twMerge("text-zinc-500", activeTab === "create-address" && "text-primary-theme")}
+                onClick={() => setSearchParams({ tab: "create-address" })}
+              >
                 Criar Endereço
               </Button>
             </li>
             <li className="text-[13px]">
-              <Button variant="link" className={twMerge("text-zinc-500", activeTab === "my-addresses" && "text-primary-theme")} onClick={() => setSearchParams({ tab: "my-addresses" })}>
+              <Button
+                variant="link"
+                className={twMerge("text-zinc-500", activeTab === "my-addresses" && "text-primary-theme")}
+                onClick={() => setSearchParams({ tab: "my-addresses" })}
+              >
                 Meus Endereços
               </Button>
             </li>

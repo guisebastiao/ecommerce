@@ -30,5 +30,11 @@ export const updateProductSchema = z.object({
   categoryId: z.string().nonempty({ message: "Informe o estoque do produto" }),
 });
 
+export const applyDiscountSchema = z.object({
+  productId: z.string().nonempty("Informe o produto"),
+  discountId: z.string().nonempty("Informe o desconto"),
+});
+
 export type CreateProductRequestDTO = z.infer<typeof createProductSchema>;
 export type UpdateProductRequestDTO = z.infer<typeof updateProductSchema>;
+export type ApplyDiscountRequestDTO = z.infer<typeof applyDiscountSchema>;

@@ -1,4 +1,4 @@
-import type { CreateProductRequestDTO, UpdateProductRequestDTO } from "@/schemas/productSchema";
+import type { ApplyDiscountRequestDTO, CreateProductRequestDTO, UpdateProductRequestDTO } from "@/schemas/productSchema";
 import type { ProductQueryParams } from "@/types/productTypes";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { productService } from "@/services/productService";
@@ -8,6 +8,19 @@ import { toast } from "sonner";
 export const createProduct = () => {
   return useMutation({
     mutationFn: (data: CreateProductRequestDTO) => productService.createProduct(data),
+    onError(error: Error) {
+      toast.error(error.message);
+    },
+    onSuccess(data) {
+      queryClient.invalidateQueries({ queryKey: ["find-all-products"] });
+      toast.success(data.message);
+    },
+  });
+};
+
+export const applyDiscount = () => {
+  return useMutation({
+    mutationFn: (data: ApplyDiscountRequestDTO) => productService.applyDiscount(data),
     onError(error: Error) {
       toast.error(error.message);
     },
@@ -58,6 +71,19 @@ export const updateProduct = () => {
 export const deleteProduct = () => {
   return useMutation({
     mutationFn: (data: { productId: string }) => productService.deleteProduct(data),
+    onError(error: Error) {
+      toast.error(error.message);
+    },
+    onSuccess(data) {
+      queryClient.invalidateQueries({ queryKey: ["find-all-products"] });
+      toast.success(data.message);
+    },
+  });
+};
+
+export const removeDiscount = () => {
+  return useMutation({
+    mutationFn: (data: { productId: string }) => productService.removeDiscount(data),
     onError(error: Error) {
       toast.error(error.message);
     },
